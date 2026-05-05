@@ -296,8 +296,8 @@ const currency = (value, digits = 1) =>
   Math.abs(value) >= 1000000 ? `$${(value / 1000000).toFixed(digits)}M` : `$${Math.round(value / 1000)}K`;
 const number = (value) => Math.round(value).toLocaleString();
 const label = "text-[11px] font-extrabold uppercase tracking-[0.12em] text-[#9A9A9A]";
-const card = "rounded-2xl border border-[#E8E6E1] bg-white p-6 shadow-[0_1px_4px_rgba(0,0,0,0.06)]";
-const sectionTitle = "text-3xl font-extrabold tracking-normal text-[#1A1A1A]";
+const card = "rounded-2xl border border-[#E8E6E1] bg-white p-4 shadow-[0_1px_4px_rgba(0,0,0,0.06)] sm:p-6";
+const sectionTitle = "text-2xl font-extrabold tracking-[-0.01em] text-[#1A1A1A] sm:text-3xl";
 
 export default function LoyaltyStrategyInABox() {
   const [activeTab, setActiveTab] = useState(DATA.modules[0]);
@@ -318,27 +318,27 @@ export default function LoyaltyStrategyInABox() {
   const setSlider = (key, value) => setSliderValues((current) => ({ ...current, [key]: Number(value) }));
 
   return (
-    <main className="min-h-screen bg-white px-8 py-7 font-['Inter'] text-[#1A1A1A]">
+    <main className="min-h-screen bg-white px-4 py-4 font-['Inter'] text-[#1A1A1A] sm:px-6 sm:py-6 lg:px-8 lg:py-7">
       <style>{`@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");`}</style>
       <section className="mx-auto max-w-[1440px]">
-        <nav className="rounded-3xl border border-[#E8E6E1] bg-[#F7F6F3] px-6 pt-5 shadow-[0_1px_4px_rgba(0,0,0,0.06)]">
-          <div className="flex items-start justify-between gap-8 pb-5">
+        <nav className="rounded-2xl border border-[#E8E6E1] bg-[#F7F6F3] px-4 pt-4 shadow-[0_1px_4px_rgba(0,0,0,0.06)] sm:rounded-3xl sm:px-6 sm:pt-5">
+          <div className="flex flex-col gap-4 pb-5 lg:flex-row lg:items-start lg:justify-between lg:gap-8">
             <div>
               <p className={label}>Demo Workspace</p>
-              <h1 className="mt-1 text-5xl font-black tracking-[-0.02em]">Loyalty Strategy in a Box</h1>
+              <h1 className="mt-1 text-3xl font-black tracking-[-0.02em] sm:text-4xl lg:text-5xl">Loyalty Strategy in a Box</h1>
               <p className="mt-2 text-sm font-semibold text-[#4B4B4B]">{COMPANY.name}</p>
               <p className="mt-2 max-w-2xl text-sm font-medium text-[#4B4B4B]">A practical strategy workspace that helps your team see where loyalty can grow customer value, what to build, and what it takes to launch with confidence.</p>
             </div>
-            <div className="flex gap-3">
-              <button className="rounded-2xl px-5 py-3 text-sm font-extrabold text-[#7C3AED] transition hover:bg-[#F3F0FF]" onClick={() => setIsDataModalOpen(true)} type="button">
+            <div className="flex w-full flex-col gap-2 sm:flex-row lg:w-auto lg:gap-3">
+              <button className="rounded-2xl px-5 py-3 text-sm font-extrabold text-[#7C3AED] transition hover:bg-[#F3F0FF] sm:w-auto" onClick={() => setIsDataModalOpen(true)} type="button">
                 Data Requirements
               </button>
-              <button className="rounded-2xl bg-[#7C3AED] px-5 py-3 text-sm font-extrabold text-white transition hover:bg-[#A78BFA]" onClick={() => setIsModalOpen(true)} type="button">
+              <button className="rounded-2xl bg-[#7C3AED] px-5 py-3 text-sm font-extrabold text-white transition hover:bg-[#A78BFA] sm:w-auto" onClick={() => setIsModalOpen(true)} type="button">
                 Generate Business Case
               </button>
             </div>
           </div>
-          <div className="flex gap-8 overflow-x-auto border-t border-[#E8E6E1]">
+          <div className="flex gap-5 overflow-x-auto border-t border-[#E8E6E1] sm:gap-8">
             {DATA.modules.map((module) => (
               <button
                 className={`relative min-h-14 whitespace-nowrap text-sm font-bold transition ${activeTab === module ? "text-[#7C3AED] after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:bg-[#7C3AED]" : "text-[#9A9A9A] hover:text-[#A78BFA]"}`}
@@ -352,7 +352,7 @@ export default function LoyaltyStrategyInABox() {
           </div>
         </nav>
 
-        <section className="pt-8">
+        <section className="pt-6 sm:pt-8">
           {activeTab === "Customer Diagnostic" && <CustomerDiagnostic />}
           {activeTab === "Program Design" && <ProgramDesign selectedProgram={selectedProgram} selectedProgramType={selectedProgramType} setSelectedProgramType={setSelectedProgramType} />}
           {activeTab === "Business Case" && <BusinessCase activeScenario={activeScenario} model={model} setScenario={setScenario} setSlider={setSlider} sliderValues={sliderValues} />}
@@ -371,8 +371,8 @@ function ModuleHeader({ eyebrow, title, subtitle }) {
   return (
     <header className="mb-7 max-w-4xl">
       <p className={label}>{eyebrow}</p>
-      <h2 className="mt-2 text-4xl font-black tracking-[-0.02em] text-[#1A1A1A]">{title}</h2>
-      <p className="mt-3 text-lg text-[#4B4B4B]">{subtitle}</p>
+      <h2 className="mt-2 text-3xl font-black tracking-[-0.02em] text-[#1A1A1A] sm:text-4xl">{title}</h2>
+      <p className="mt-3 text-base text-[#4B4B4B] sm:text-lg">{subtitle}</p>
     </header>
   );
 }
@@ -382,13 +382,13 @@ function CustomerDiagnostic() {
   return (
     <div className="space-y-6">
       <ModuleHeader eyebrow="Module 1" subtitle="Program candidacy, translated: where loyalty can create real incremental lift." title="Customer Diagnostic" />
-      <section className={`${card} grid grid-cols-[0.6fr_1fr] items-center gap-8 bg-gradient-to-r from-[#F3F0FF] to-white`}>
+      <section className={`${card} grid grid-cols-1 items-center gap-6 bg-gradient-to-r from-[#F3F0FF] to-white lg:grid-cols-[0.6fr_1fr] lg:gap-8`}>
         <div>
           <p className={label}>Loyalty Opportunity Score</p>
-          <p className="mt-2 text-8xl font-extrabold">{DATA.diagnostic.opportunityScore}<span className="text-2xl text-[#9A9A9A]">/100</span></p>
+          <p className="mt-2 text-6xl font-extrabold sm:text-8xl">{DATA.diagnostic.opportunityScore}<span className="text-xl text-[#9A9A9A] sm:text-2xl">/100</span></p>
           <div className="mt-5 h-2.5 overflow-hidden rounded-full bg-[#EDE9FE]"><div className="h-full rounded-full bg-[#7C3AED]" style={{ width: `${DATA.diagnostic.opportunityScore}%` }} /></div>
         </div>
-        <p className="text-2xl leading-snug text-[#4B4B4B]">{DATA.diagnostic.verdict}</p>
+        <p className="text-lg leading-snug text-[#4B4B4B] sm:text-2xl">{DATA.diagnostic.verdict}</p>
       </section>
       <section className={card}>
         <Header labelText="1B. Model-Attributed RFM Segmentation" title="Where loyalty value is concentrated — and where to focus first" />
@@ -407,7 +407,7 @@ function CustomerDiagnostic() {
         </ChartBox>
         <Table headers={["Segment", "Customers", "% Revenue", "AOV", "Frequency", "Recommended Action"]} rows={DATA.diagnostic.rfm.map((s) => [s.segment, number(s.customers), `${s.revenue}%`, `$${s.aov}`, `${s.frequency}x`, s.action])} />
       </section>
-      <div className="grid grid-cols-[1.15fr_0.85fr] gap-6">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-[1.15fr_0.85fr]">
         <section className={card}>
           <Header labelText="1C. Revenue Concentration" title="Top customers create the economic case" />
           <ChartBox>
@@ -443,7 +443,7 @@ function CustomerDiagnostic() {
       </div>
       <section className={`${card} bg-gradient-to-r from-[#F3F0FF] to-white`}>
         <p className={label}>1E. Loyalty Program Candidate Sizing</p>
-        <p className="mt-3 text-3xl leading-snug text-[#4B4B4B]">Based on this analysis, <strong className="text-[#7C3AED]">{DATA.diagnostic.candidateSizing.percentage}</strong> of your active customer base - approximately <strong className="text-[#7C3AED]">{DATA.diagnostic.candidateSizing.customers}</strong> customers - represent <strong className="text-[#7C3AED]">{DATA.diagnostic.candidateSizing.revenue}</strong> in addressable annual revenue.</p>
+        <p className="mt-3 text-xl leading-snug text-[#4B4B4B] sm:text-3xl">Based on this analysis, <strong className="text-[#7C3AED]">{DATA.diagnostic.candidateSizing.percentage}</strong> of your active customer base - approximately <strong className="text-[#7C3AED]">{DATA.diagnostic.candidateSizing.customers}</strong> customers - represent <strong className="text-[#7C3AED]">{DATA.diagnostic.candidateSizing.revenue}</strong> in addressable annual revenue.</p>
       </section>
     </div>
   );
@@ -453,13 +453,13 @@ function ProgramDesign({ selectedProgram, selectedProgramType, setSelectedProgra
   return (
     <div className="space-y-6">
       <ModuleHeader eyebrow="Module 2" subtitle="Engagement architecture, translated: the program design most likely to change behavior." title="Program Design" />
-      <section className={`${card} grid grid-cols-[0.8fr_1.2fr] gap-8 bg-gradient-to-r from-[#F3F0FF] to-white`}>
-        <div><p className={label}>2A. Recommended Engagement Architecture</p><h3 className="mt-2 text-4xl font-extrabold">{DATA.program.recommendation.type}</h3><p className="mt-4 inline-flex rounded-full bg-emerald-50 px-3 py-2 text-sm font-extrabold text-emerald-800">{DATA.program.recommendation.confidence}</p></div>
+      <section className={`${card} grid grid-cols-1 gap-6 bg-gradient-to-r from-[#F3F0FF] to-white lg:grid-cols-[0.8fr_1.2fr] lg:gap-8`}>
+        <div><p className={label}>2A. Recommended Engagement Architecture</p><h3 className="mt-2 text-3xl font-extrabold sm:text-4xl">{DATA.program.recommendation.type}</h3><p className="mt-4 inline-flex rounded-full bg-emerald-50 px-3 py-2 text-sm font-extrabold text-emerald-800">{DATA.program.recommendation.confidence}</p></div>
         <ul className="list-disc space-y-2 pl-5 text-[#4B4B4B]">{DATA.program.recommendation.rationale.map((item) => <li key={item}>{item}</li>)}</ul>
       </section>
       <section className={card}>
         <Header labelText="2B. Efficiency Frontier: Program Type Selector" title="Compare alternatives without losing the recommendation" />
-        <div className="grid grid-cols-5 gap-4 overflow-x-auto">
+        <div className="grid grid-flow-col auto-cols-[220px] gap-4 overflow-x-auto lg:grid-flow-row lg:grid-cols-5">
           {DATA.program.types.map((type) => (
             <button className={`min-w-[220px] rounded-2xl border p-4 text-left transition ${selectedProgramType === type.id ? "border-[#7C3AED] bg-[#F3F0FF]" : "border-[#E8E6E1] bg-white hover:border-[#A78BFA]"}`} key={type.id} onClick={() => setSelectedProgramType(type.id)} type="button">
               <span className="rounded-full bg-[#EDE9FE] px-2 py-1 text-xs font-extrabold text-[#5B21B6]">{type.fit} fit</span>
@@ -473,13 +473,13 @@ function ProgramDesign({ selectedProgram, selectedProgramType, setSelectedProgra
       </section>
       <section className={card}>
         <Header labelText="2C. Operating Model Configuration" title={`${selectedProgram.name} mechanics — the rules clients and store teams can actually use`} />
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           {selectedProgram.config.tiers ? selectedProgram.config.tiers.map((tier) => <ConfigCard key={tier.name} title={tier.name} value={tier.threshold} lines={[`${tier.projection} projected distribution`, ...tier.benefits]} />) : Object.entries(selectedProgram.config).map(([key, value]) => <ConfigCard key={key} title={key} value={Array.isArray(value) ? value.join(", ") : value} />)}
         </div>
-        <div className="mt-4 grid grid-cols-2 gap-4"><Kpi labelText="Projected enrollment rate" value={selectedProgram.enrollmentRate} /><Kpi labelText="Expected active member rate" value={selectedProgram.activeRate} /></div>
+        <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2"><Kpi labelText="Projected enrollment rate" value={selectedProgram.enrollmentRate} /><Kpi labelText="Expected active member rate" value={selectedProgram.activeRate} /></div>
       </section>
       <section className={card}><Header labelText="2D. Competitive Benchmark Panel" title="How peers are playing loyalty — and where not to over-copy them" /><Table headers={["Company", "Type", "Earn Rate", "Differentiator", "Members", "Delta"]} rows={DATA.program.benchmarks.map((b) => [b.company, b.type, b.earn, b.differentiator, b.members, b.delta])} /></section>
-      <section className={card}><Header labelText="2E. Program Naming & Identity Suggestion" title="Brand-right names to explore" /><div className="grid grid-cols-3 gap-4">{DATA.program.names.map((n) => <div className="rounded-2xl bg-[#F7F6F3] p-5" key={n.name}><strong className="text-xl text-[#7C3AED]">{n.name}</strong><p className="mt-2 text-sm text-[#4B4B4B]">{n.rationale}</p></div>)}</div></section>
+      <section className={card}><Header labelText="2E. Program Naming & Identity Suggestion" title="Brand-right names to explore" /><div className="grid grid-cols-1 gap-4 md:grid-cols-3">{DATA.program.names.map((n) => <div className="rounded-2xl bg-[#F7F6F3] p-5" key={n.name}><strong className="text-xl text-[#7C3AED]">{n.name}</strong><p className="mt-2 text-sm text-[#4B4B4B]">{n.rationale}</p></div>)}</div></section>
     </div>
   );
 }
@@ -492,15 +492,15 @@ function BusinessCase({ activeScenario, model, setScenario, setSlider, sliderVal
       <ModuleHeader eyebrow="Module 3" subtitle="Retention economics, translated: how the program pays back and where the risk sits." title="Business Case" />
       <section className={card}>
         <Header labelText="3A. Scenario Selector" title="Choose the financial posture — conservative, base, or upside case" />
-        <div className="grid grid-cols-3 gap-4">{Object.keys(DATA.businessCase.scenarios).map((scenario) => <button className={`rounded-2xl border p-4 text-left ${activeScenario === scenario ? "border-[#7C3AED] bg-[#F3F0FF]" : "border-[#E8E6E1]"}`} key={scenario} onClick={() => setScenario(scenario)} type="button"><strong>{scenario}</strong><p className="mt-1 text-sm text-[#9A9A9A]">{DATA.businessCase.scenarios[scenario].enrollmentRate}% enrollment</p></button>)}</div>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">{Object.keys(DATA.businessCase.scenarios).map((scenario) => <button className={`rounded-2xl border p-4 text-left ${activeScenario === scenario ? "border-[#7C3AED] bg-[#F3F0FF]" : "border-[#E8E6E1]"}`} key={scenario} onClick={() => setScenario(scenario)} type="button"><strong>{scenario}</strong><p className="mt-1 text-sm text-[#9A9A9A]">{DATA.businessCase.scenarios[scenario].enrollmentRate}% enrollment</p></button>)}</div>
       </section>
       <section className={card}>
         <Header labelText="3B. Sensitivity Controls" title="Model inputs — the levers the CFO will care about" />
-        <div className="grid grid-cols-4 gap-3">{assumptionTiles(sliderValues).map((item) => <Kpi key={item.labelText} {...item} />)}</div>
-        <div className="mt-5 grid grid-cols-2 gap-4">{[["enrollmentRate", "Enrollment Rate", 25, 65], ["churnReduction", "Churn Reduction", 3, 25], ["aovLift", "AOV Lift", 1, 18], ["redemptionRate", "Redemption Rate", 25, 70]].map(([key, name, min, max]) => <Slider key={key} labelText={name} max={max} min={min} onChange={(value) => setSlider(key, value)} value={sliderValues[key]} />)}</div>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">{assumptionTiles(sliderValues).map((item) => <Kpi key={item.labelText} {...item} />)}</div>
+        <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2">{[["enrollmentRate", "Enrollment Rate", 25, 65], ["churnReduction", "Churn Reduction", 3, 25], ["aovLift", "AOV Lift", 1, 18], ["redemptionRate", "Redemption Rate", 25, 70]].map(([key, name, min, max]) => <Slider key={key} labelText={name} max={max} min={min} onChange={(value) => setSlider(key, value)} value={sliderValues[key]} />)}</div>
       </section>
-      <div className="grid grid-cols-[1.1fr_0.9fr] gap-6"><Pnl model={model} /><Scorecard model={model} /></div>
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-[1.1fr_0.9fr]"><Pnl model={model} /><Scorecard model={model} /></div>
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
         <section className={card}><Header labelText="3D. Model-Attributed LTV Impact" title="Member economics by segment — the incremental lift case" /><ChartBox><ResponsiveContainer><BarChart data={ltvData}><CartesianGrid stroke="#F0EEF8" /><XAxis dataKey="segment" /><YAxis /><Tooltip /><Legend /><Bar dataKey="nonMember" fill="#DDD8F5" name="Non-member" radius={[8, 8, 0, 0]} /><Bar dataKey="member" fill="#7C3AED" name="Member" radius={[8, 8, 0, 0]} /></BarChart></ResponsiveContainer></ChartBox></section>
         <section className={card}><Header labelText="3E. Break-Even Analysis" title="Cumulative value curve — when the investment clears the hurdle" /><ChartBox><ResponsiveContainer><LineChart data={breakEvenData}><CartesianGrid stroke="#F0EEF8" /><XAxis dataKey="month" /><YAxis tickFormatter={(v) => currency(v, 0)} /><Tooltip formatter={(v) => currency(v)} /><ReferenceArea fill="#F3F0FF" x1={model.paybackMonths} x2={36} /><ReferenceLine label={`Break-even month ${model.paybackMonths}`} stroke="#7C3AED" strokeDasharray="4 4" x={model.paybackMonths} /><Line dataKey="revenue" stroke="#7C3AED" strokeWidth={3} /><Line dataKey="cost" stroke="#A78BFA" strokeWidth={3} /></LineChart></ResponsiveContainer></ChartBox></section>
       </div>
@@ -518,9 +518,9 @@ function MemberJourney() {
         <p className="mt-4 rounded-2xl bg-[#F3F0FF] p-4 font-bold text-[#5B21B6]">Biggest drop-off risk: awareness to enrollment. The action: make store prompts and post-purchase flows unavoidable at launch.</p>
       </section>
       <section className={card}><Header labelText="4B. Lifecycle Trigger Map" title="Engagement architecture — the next best action at each moment" /><div className="flex gap-4 overflow-x-auto">{DATA.journey.lifecycle.map((m, i) => <div className="min-w-[220px] rounded-2xl border border-[#E8E6E1] bg-white p-4" key={m.moment}><span className="grid h-9 w-9 place-items-center rounded-full bg-[#7C3AED] text-sm font-extrabold text-white">{i + 1}</span><h4 className="mt-3 font-extrabold">{m.moment}</h4><p className="mt-2 text-sm text-[#4B4B4B]">{m.condition}</p><p className="mt-3 text-xs font-bold text-[#7C3AED]">{m.channels.join(" / ")}</p><p className="mt-2 text-sm font-bold">{m.message}</p><p className="mt-1 text-sm text-[#9A9A9A]">{m.response} response</p></div>)}</div></section>
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
         <section className={card}><Header labelText="4C. Redemption Liability Projection" title="Reward balance under control — accounting exposure stays bounded" /><ChartBox><ResponsiveContainer><LineChart data={DATA.journey.liability}><CartesianGrid stroke="#F0EEF8" /><XAxis dataKey="month" /><YAxis tickFormatter={(v) => currency(v, 1)} /><Tooltip formatter={(v) => currency(v)} /><Line dataKey="liability" stroke="#7C3AED" strokeWidth={3} /><Line dataKey="redemption" stroke="#A78BFA" strokeWidth={3} /></LineChart></ResponsiveContainer></ChartBox><p className="mt-4 rounded-2xl bg-[#F3F0FF] p-4 font-bold text-[#5B21B6]">Peak redemption liability of $1.91M is expected at month 30. The implication: the rewards balance is material, but not a balance-sheet surprise.</p></section>
-        <section className={card}><Header labelText="4D. Channel Efficiency Frontier" title="Where to invest in channels — not every touchpoint deserves equal funding" /><div className="grid grid-cols-7 gap-2 text-sm"><span />{["Email", "Push", "SMS", "In-store", "App", "Mail"].map((c) => <b className="text-xs text-[#9A9A9A]" key={c}>{c}</b>)}{DATA.journey.matrix.map((row) => <React.Fragment key={row.segment}><b>{row.segment}</b>{["Email", "Push", "SMS", "In-store", "App", "Mail"].map((c) => <span className={`rounded-xl p-3 text-center font-extrabold ${row[c] > 30 ? "bg-[#7C3AED] text-white" : row[c] > 20 ? "bg-[#A78BFA] text-white" : "bg-[#F3F0FF] text-[#4B4B4B]"}`} key={c}>{row[c]}%</span>)}</React.Fragment>)}</div></section>
+        <section className={card}><Header labelText="4D. Channel Efficiency Frontier" title="Where to invest in channels — not every touchpoint deserves equal funding" /><div className="overflow-x-auto"><div className="grid min-w-[680px] grid-cols-7 gap-2 text-sm"><span />{["Email", "Push", "SMS", "In-store", "App", "Mail"].map((c) => <b className="text-xs text-[#9A9A9A]" key={c}>{c}</b>)}{DATA.journey.matrix.map((row) => <React.Fragment key={row.segment}><b>{row.segment}</b>{["Email", "Push", "SMS", "In-store", "App", "Mail"].map((c) => <span className={`rounded-xl p-3 text-center font-extrabold ${row[c] > 30 ? "bg-[#7C3AED] text-white" : row[c] > 20 ? "bg-[#A78BFA] text-white" : "bg-[#F3F0FF] text-[#4B4B4B]"}`} key={c}>{row[c]}%</span>)}</React.Fragment>)}</div></div></section>
       </div>
     </div>
   );
@@ -528,7 +528,7 @@ function MemberJourney() {
 
 function ActivationCurve() {
   return (
-    <div className="grid grid-cols-[1fr_320px] gap-5">
+    <div className="grid grid-cols-1 gap-5 xl:grid-cols-[1fr_320px]">
       <ChartBox>
         <ResponsiveContainer>
           <BarChart data={DATA.journey.funnel} layout="vertical" margin={{ top: 8, right: 34, bottom: 8, left: 34 }}>
@@ -563,10 +563,10 @@ function DataRoadmap() {
   return (
     <div className="space-y-6">
       <ModuleHeader eyebrow="Module 5" subtitle="Implementation readiness, translated: what must be true to make the model real." title="Data & Roadmap" />
-      <section className={card}><Header labelText="5A. Data Readiness Requirements" title="The minimum viable data spine — what we need before strategy becomes executable" /><div className="grid grid-cols-3 gap-4">{DATA.roadmap.requirements.map((tier) => <div className="rounded-2xl bg-[#F7F6F3] p-5" key={tier.tier}><p className={label}>{tier.tier}</p><h4 className="mt-2 text-xl font-extrabold">{tier.title}</h4><div className="mt-4 space-y-3">{tier.items.map((item) => <div className="rounded-xl bg-white p-3" key={item.name}><b>{item.name}</b><p className="text-xs text-[#4B4B4B]">{item.source} | {item.format}</p><span className={`mt-2 inline-flex rounded-full px-2 py-1 text-xs font-extrabold ${item.availability === "Green" ? "bg-emerald-50 text-emerald-800" : item.availability === "Amber" ? "bg-amber-50 text-amber-800" : "bg-rose-50 text-rose-800"}`}>{item.availability}</span></div>)}</div></div>)}</div></section>
-      <section className={card}><Header labelText="5B. Technology Stack Recommendation" title="Platform fit — the fastest path without overbuying enterprise complexity" /><div className="grid grid-cols-5 gap-4 overflow-x-auto">{DATA.roadmap.platforms.map((p) => <div className={`min-w-[220px] rounded-2xl border p-4 ${p.recommended ? "border-[#7C3AED] bg-[#F3F0FF]" : "border-[#E8E6E1] bg-white"}`} key={p.name}><span className="rounded-full bg-[#EDE9FE] px-2 py-1 text-xs font-extrabold text-[#5B21B6]">{p.recommended ? "Best Fit" : `${p.fit} fit`}</span><h4 className="mt-4 text-xl font-extrabold">{p.name}</h4><p className="mt-2 text-sm text-[#4B4B4B]">{p.bestFor}</p><p className="mt-4 text-sm font-bold">{p.time}</p><p className="text-sm text-[#4B4B4B]">{p.cost}</p></div>)}</div></section>
-      <section className={card}><Header labelText="5C. Implementation Roadmap" title="Execution path — from diagnostic to in-market learning loop" /><div className="space-y-4">{DATA.roadmap.phases.map((phase) => <div className="grid grid-cols-[160px_1fr_320px] items-center gap-5 rounded-2xl bg-[#F7F6F3] p-4" key={phase.name}><div><b>{phase.name}</b><p className="text-sm text-[#4B4B4B]">{phase.months}</p></div><div className="relative h-5 rounded-full bg-white"><span className="absolute top-1 h-3 rounded-full bg-[#7C3AED]" style={{ left: phase.offset, width: phase.width }} /></div><ul className="list-disc pl-5 text-sm text-[#4B4B4B]">{phase.deliverables.map((d) => <li key={d}>{d}</li>)}</ul></div>)}</div></section>
-      <section className={card}><Header labelText="5D. Team & Governance" title="Operating model — who owns the economics after launch" /><div className="grid grid-cols-5 gap-4">{DATA.roadmap.governance.map((g) => <div className="rounded-2xl bg-[#F7F6F3] p-5" key={g.role}><h4 className="font-extrabold">{g.role}</h4><p className="mt-3 text-sm text-[#4B4B4B]">{g.owner}</p><p className="mt-2 text-xl font-extrabold text-[#7C3AED]">{g.fte}</p></div>)}</div></section>
+      <section className={card}><Header labelText="5A. Data Readiness Requirements" title="The minimum viable data spine — what we need before strategy becomes executable" /><div className="grid grid-cols-1 gap-4 lg:grid-cols-3">{DATA.roadmap.requirements.map((tier) => <div className="rounded-2xl bg-[#F7F6F3] p-5" key={tier.tier}><p className={label}>{tier.tier}</p><h4 className="mt-2 text-xl font-extrabold">{tier.title}</h4><div className="mt-4 space-y-3">{tier.items.map((item) => <div className="rounded-xl bg-white p-3" key={item.name}><b>{item.name}</b><p className="text-xs text-[#4B4B4B]">{item.source} | {item.format}</p><span className={`mt-2 inline-flex rounded-full px-2 py-1 text-xs font-extrabold ${item.availability === "Green" ? "bg-emerald-50 text-emerald-800" : item.availability === "Amber" ? "bg-amber-50 text-amber-800" : "bg-rose-50 text-rose-800"}`}>{item.availability}</span></div>)}</div></div>)}</div></section>
+      <section className={card}><Header labelText="5B. Technology Stack Recommendation" title="Platform fit — the fastest path without overbuying enterprise complexity" /><div className="grid grid-flow-col auto-cols-[220px] gap-4 overflow-x-auto lg:grid-flow-row lg:grid-cols-5">{DATA.roadmap.platforms.map((p) => <div className={`rounded-2xl border p-4 ${p.recommended ? "border-[#7C3AED] bg-[#F3F0FF]" : "border-[#E8E6E1] bg-white"}`} key={p.name}><span className="rounded-full bg-[#EDE9FE] px-2 py-1 text-xs font-extrabold text-[#5B21B6]">{p.recommended ? "Best Fit" : `${p.fit} fit`}</span><h4 className="mt-4 text-xl font-extrabold">{p.name}</h4><p className="mt-2 text-sm text-[#4B4B4B]">{p.bestFor}</p><p className="mt-4 text-sm font-bold">{p.time}</p><p className="text-sm text-[#4B4B4B]">{p.cost}</p></div>)}</div></section>
+      <section className={card}><Header labelText="5C. Implementation Roadmap" title="Execution path — from diagnostic to in-market learning loop" /><div className="space-y-4">{DATA.roadmap.phases.map((phase) => <div className="grid grid-cols-1 gap-4 rounded-2xl bg-[#F7F6F3] p-4 lg:grid-cols-[160px_1fr_320px] lg:items-center lg:gap-5" key={phase.name}><div><b>{phase.name}</b><p className="text-sm text-[#4B4B4B]">{phase.months}</p></div><div className="relative h-5 rounded-full bg-white"><span className="absolute top-1 h-3 rounded-full bg-[#7C3AED]" style={{ left: phase.offset, width: phase.width }} /></div><ul className="list-disc pl-5 text-sm text-[#4B4B4B]">{phase.deliverables.map((d) => <li key={d}>{d}</li>)}</ul></div>)}</div></section>
+      <section className={card}><Header labelText="5D. Team & Governance" title="Operating model — who owns the economics after launch" /><div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">{DATA.roadmap.governance.map((g) => <div className="rounded-2xl bg-[#F7F6F3] p-5" key={g.role}><h4 className="font-extrabold">{g.role}</h4><p className="mt-3 text-sm text-[#4B4B4B]">{g.owner}</p><p className="mt-2 text-xl font-extrabold text-[#7C3AED]">{g.fte}</p></div>)}</div></section>
     </div>
   );
 }
@@ -574,12 +574,12 @@ function DataRoadmap() {
 function DataRequirementsModal({ onClose }) {
   return (
     <div className="fixed inset-0 z-50 overflow-auto bg-white">
-      <div className="sticky top-0 z-10 flex items-center justify-between gap-6 border-b border-[#E8E6E1] bg-white/95 px-8 py-4">
+      <div className="sticky top-0 z-10 flex flex-col gap-4 border-b border-[#E8E6E1] bg-white/95 px-4 py-4 sm:px-8 lg:flex-row lg:items-center lg:justify-between lg:gap-6">
         <div>
           <b>{COMPANY.name}</b>
           <p className={label}>Data Readiness Diligence | For Discussion Purposes Only</p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex w-full flex-col gap-2 sm:flex-row lg:w-auto lg:gap-3">
           <button className="rounded-2xl border border-[#7C3AED] px-4 py-2 font-extrabold text-[#7C3AED] hover:bg-[#F3F0FF]" onClick={() => window.print()} type="button">
             Download Data Checklist
           </button>
@@ -588,10 +588,10 @@ function DataRequirementsModal({ onClose }) {
           </button>
         </div>
       </div>
-      <article className="mx-auto max-w-[1180px] space-y-10 px-8 py-12">
+      <article className="mx-auto max-w-[1180px] space-y-8 px-4 py-8 sm:space-y-10 sm:px-8 sm:py-12">
         <header className="border-b border-[#E8E6E1] pb-10">
           <p className={label}>Replication Requirements</p>
-          <h2 className="mt-3 max-w-4xl text-5xl font-black leading-none tracking-[-0.02em]">{DATA.dataRequirements.title}</h2>
+          <h2 className="mt-3 max-w-4xl text-3xl font-black leading-none tracking-[-0.02em] sm:text-5xl">{DATA.dataRequirements.title}</h2>
           <p className="mt-5 max-w-4xl text-lg font-semibold leading-7 text-[#4B4B4B]">
             {DATA.dataRequirements.subtitle.replace("Ridge & Roam Outfitters", COMPANY.name)}
           </p>
@@ -601,7 +601,7 @@ function DataRequirementsModal({ onClose }) {
         {DATA.dataRequirements.sections.map((section) => (
           <section className="border-b border-[#E8E6E1] pb-10" key={section.title}>
             <p className={label}>What it powers: {section.powers}</p>
-            <h3 className="mt-2 text-3xl font-black tracking-[-0.02em] text-[#1A1A1A]">{section.title}</h3>
+            <h3 className="mt-2 text-2xl font-black tracking-[-0.02em] text-[#1A1A1A] sm:text-3xl">{section.title}</h3>
             <DataRequirementsTable rows={section.rows} />
           </section>
         ))}
@@ -609,9 +609,9 @@ function DataRequirementsModal({ onClose }) {
         <section className="space-y-5 pb-4">
           <div>
             <p className={label}>Readiness Assessment Summary</p>
-            <h3 className="mt-2 text-3xl font-black tracking-[-0.02em] text-[#1A1A1A]">The work is mostly extraction, not invention</h3>
+            <h3 className="mt-2 text-2xl font-black tracking-[-0.02em] text-[#1A1A1A] sm:text-3xl">The work is mostly extraction, not invention</h3>
           </div>
-          <div className="grid grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
             {DATA.dataRequirements.summary.map(([name, value]) => (
               <Kpi key={name} labelText={name} value={value} />
             ))}
@@ -620,7 +620,7 @@ function DataRequirementsModal({ onClose }) {
             <span className="block text-sm uppercase tracking-widest text-[#7C3AED]">Partner readout</span>
             {DATA.dataRequirements.callout}
           </div>
-          <div className="flex gap-3 pt-2">
+          <div className="flex flex-col gap-3 pt-2 sm:flex-row">
             <button className="rounded-2xl border border-[#7C3AED] px-5 py-3 font-extrabold text-[#7C3AED] hover:bg-[#F3F0FF]" onClick={() => window.print()} type="button">
               Download Data Checklist
             </button>
@@ -667,18 +667,18 @@ function BusinessCaseModal({ model, onClose }) {
   const tierOne = DATA.roadmap.requirements[0].items;
   return (
     <div className="fixed inset-0 z-50 overflow-auto bg-white">
-      <div className="sticky top-0 z-10 flex items-center justify-between border-b border-[#E8E6E1] bg-white/95 px-8 py-4">
+      <div className="sticky top-0 z-10 flex flex-col gap-4 border-b border-[#E8E6E1] bg-white/95 px-4 py-4 sm:px-8 lg:flex-row lg:items-center lg:justify-between">
         <div><b>{COMPANY.name}</b><p className={label}>For Discussion Purposes Only</p></div>
-        <div className="flex gap-3"><button className="rounded-2xl border border-[#7C3AED] px-4 py-2 font-extrabold text-[#7C3AED]" onClick={() => window.print()} type="button">Download as PDF</button><button className="rounded-2xl px-4 py-2 font-extrabold text-[#7C3AED] hover:bg-[#F3F0FF]" onClick={onClose} type="button">Close</button></div>
+        <div className="flex w-full flex-col gap-2 sm:flex-row lg:w-auto lg:gap-3"><button className="rounded-2xl border border-[#7C3AED] px-4 py-2 font-extrabold text-[#7C3AED]" onClick={() => window.print()} type="button">Download as PDF</button><button className="rounded-2xl px-4 py-2 font-extrabold text-[#7C3AED] hover:bg-[#F3F0FF]" onClick={onClose} type="button">Close</button></div>
       </div>
-      <article className="mx-auto max-w-[1120px] space-y-10 px-8 py-12">
-        <header className="border-b border-[#E8E6E1] pb-10"><p className={label}>Consulting Deliverable</p><h2 className="mt-3 max-w-3xl text-6xl font-black leading-none tracking-[-0.02em]">Loyalty Program Business Case</h2><p className="mt-5 font-bold text-[#4B4B4B]">{COMPANY.name} | Prepared by {DATA.firm.name} | {DATA.firm.reportDate}</p></header>
+      <article className="mx-auto max-w-[1120px] space-y-8 px-4 py-8 sm:space-y-10 sm:px-8 sm:py-12">
+        <header className="border-b border-[#E8E6E1] pb-10"><p className={label}>Consulting Deliverable</p><h2 className="mt-3 max-w-3xl text-4xl font-black leading-none tracking-[-0.02em] sm:text-6xl">Loyalty Program Business Case</h2><p className="mt-5 font-bold text-[#4B4B4B]">{COMPANY.name} | Prepared by {DATA.firm.name} | {DATA.firm.reportDate}</p></header>
         <ReportSection title="Executive Summary"><p>{COMPANY.name} shows strong program candidacy: revenue is concentrated, lapse risk is measurable, and the customer file has enough behavioral signal to support a structured engagement architecture. The brand does not need a generic rewards layer; it needs a targeted system for protecting the best customers and moving the next cohort up. We recommend a tiered status program. The current model attributes {currency(model.netValue)} in annual net value, {Math.round(model.roi)}% ROI, and payback by month {model.paybackMonths}.</p></ReportSection>
-        <ReportSection title="The Opportunity"><div className="grid grid-cols-4 gap-4"><Kpi labelText="Revenue Concentration" value="58%" /><Kpi labelText="Churn Risk" value={DATA.diagnostic.revenueAtRisk} /><Kpi labelText="Candidates" value={DATA.diagnostic.candidateSizing.customers} /><Kpi labelText="Addressable Revenue" value={DATA.diagnostic.candidateSizing.revenue} /></div></ReportSection>
+        <ReportSection title="The Opportunity"><div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4"><Kpi labelText="Revenue Concentration" value="58%" /><Kpi labelText="Churn Risk" value={DATA.diagnostic.revenueAtRisk} /><Kpi labelText="Candidates" value={DATA.diagnostic.candidateSizing.customers} /><Kpi labelText="Addressable Revenue" value={DATA.diagnostic.candidateSizing.revenue} /></div></ReportSection>
         <ReportSection title="Our Recommendation"><p className="text-2xl font-extrabold text-[#7C3AED]">{DATA.program.recommendation.type}</p><p className="mt-2 font-bold text-[#4B4B4B]">The strategic logic: use status to shift behavior, not discounts to buy transactions.</p><ul className="mt-4 list-disc space-y-2 pl-5">{DATA.program.recommendation.rationale.slice(0, 3).map((r) => <li key={r}>{r}</li>)}</ul></ReportSection>
         <ReportSection title="Financial Model - Base Case"><Pnl model={model} compact /><Scorecard model={model} /></ReportSection>
         <ReportSection title="What We Need From You"><div className="space-y-3">{tierOne.map((item) => <label className="flex gap-3 rounded-2xl bg-[#F7F6F3] p-4" key={item.name}><input checked readOnly type="checkbox" /><span><b>{item.name}</b><br /><span className="text-sm text-[#4B4B4B]">{item.source} | {item.format}</span></span></label>)}</div></ReportSection>
-        <ReportSection title="Recommended Next Steps"><ol className="grid grid-cols-3 gap-4"><NextStep numberText="1" text="Data readiness assessment" time="2 weeks" /><NextStep numberText="2" text="Platform RFP and vendor selection" time="4-6 weeks" /><NextStep numberText="3" text="Pilot program design and launch" time="3 months" /></ol></ReportSection>
+        <ReportSection title="Recommended Next Steps"><ol className="grid grid-cols-1 gap-4 md:grid-cols-3"><NextStep numberText="1" text="Data readiness assessment" time="2 weeks" /><NextStep numberText="2" text="Platform RFP and vendor selection" time="4-6 weeks" /><NextStep numberText="3" text="Pilot program design and launch" time="3 months" /></ol></ReportSection>
       </article>
     </div>
   );
@@ -689,7 +689,7 @@ function Header({ labelText, title }) {
 }
 
 function ChartBox({ children }) {
-  return <div className="h-[330px] rounded-2xl bg-[#F7F6F3] p-4">{children}</div>;
+  return <div className="h-[280px] rounded-2xl bg-[#F7F6F3] p-3 sm:h-[330px] sm:p-4">{children}</div>;
 }
 
 function Table({ headers, rows }) {
@@ -704,7 +704,7 @@ function Table({ headers, rows }) {
 }
 
 function Kpi({ labelText, value }) {
-  return <div className="rounded-2xl border border-[#E8E6E1] bg-[#F7F6F3] p-5"><p className={label}>{labelText}</p><strong className="mt-2 block text-4xl font-extrabold text-[#7C3AED]">{value}</strong></div>;
+  return <div className="rounded-2xl border border-[#E8E6E1] bg-[#F7F6F3] p-4 sm:p-5"><p className={label}>{labelText}</p><strong className="mt-2 block text-3xl font-extrabold text-[#7C3AED] sm:text-4xl">{value}</strong></div>;
 }
 
 function ConfigCard({ title, value, lines = [] }) {
@@ -712,7 +712,7 @@ function ConfigCard({ title, value, lines = [] }) {
 }
 
 function Slider({ labelText, value, min, max, onChange }) {
-  return <label className="rounded-2xl bg-[#F7F6F3] p-5"><span className="flex justify-between text-xs font-extrabold uppercase tracking-widest text-[#9A9A9A]">{labelText}<b className="text-[#7C3AED]">{value}%</b></span><input className="mt-4 w-full accent-[#7C3AED]" max={max} min={min} onChange={(e) => onChange(e.target.value)} type="range" value={value} /></label>;
+  return <label className="rounded-2xl bg-[#F7F6F3] p-4 sm:p-5"><span className="flex justify-between gap-3 text-xs font-extrabold uppercase tracking-widest text-[#9A9A9A]">{labelText}<b className="text-[#7C3AED]">{value}%</b></span><input className="mt-4 w-full accent-[#7C3AED]" max={max} min={min} onChange={(e) => onChange(e.target.value)} type="range" value={value} /></label>;
 }
 
 function assumptionTiles(a) {
@@ -730,11 +730,11 @@ function assumptionTiles(a) {
 
 function Pnl({ model, compact = false }) {
   const rows = [["REVENUE IMPACT", ""], ["+ Incremental lift from frequency", currency(model.frequencyRevenue)], ["+ Incremental lift from AOV", currency(model.aovRevenue)], ["+ Retention economics from churn reduction", currency(model.churnRevenue)], ["= Total Revenue Impact", currency(model.totalRevenue)], ["PROGRAM COSTS", ""], ["- Redemption liability", currency(model.redemptionCost)], ["- Operating costs", currency(model.operatingCost)], ["- Technology costs", currency(model.technologyCost, 2)], ["= Total Program Costs", currency(model.totalCosts)]];
-  return <section className={compact ? "" : card}><Header labelText="3C. Program P&L" title="Annual value creation — the CFO view, without the spreadsheet fog" /><div className="divide-y divide-[#E8E6E1] border-y border-[#E8E6E1]">{rows.map(([name, val]) => <div className={`grid grid-cols-[1fr_auto] py-3 ${val ? "text-[#4B4B4B]" : "text-xs font-extrabold uppercase tracking-widest text-[#9A9A9A]"}`} key={name}><span>{name}</span>{val && <b className="text-[#1A1A1A]">{val}</b>}</div>)}</div><div className="mt-5 rounded-2xl bg-[#F3F0FF] p-5"><p className={label}>Net Program Value</p><strong className="mt-2 block text-6xl font-extrabold text-[#7C3AED]">{currency(model.netValue)}</strong></div><div className="mt-4 grid grid-cols-2 gap-4"><Kpi labelText="Program ROI" value={`${Math.round(model.roi)}%`} /><Kpi labelText="Payback Period" value={`${model.paybackMonths} mo`} /></div></section>;
+  return <section className={compact ? "" : card}><Header labelText="3C. Program P&L" title="Annual value creation — the CFO view, without the spreadsheet fog" /><div className="divide-y divide-[#E8E6E1] border-y border-[#E8E6E1]">{rows.map(([name, val]) => <div className={`grid grid-cols-[1fr_auto] gap-3 py-3 ${val ? "text-[#4B4B4B]" : "text-xs font-extrabold uppercase tracking-widest text-[#9A9A9A]"}`} key={name}><span>{name}</span>{val && <b className="text-right text-[#1A1A1A]">{val}</b>}</div>)}</div><div className="mt-5 rounded-2xl bg-[#F3F0FF] p-5"><p className={label}>Net Program Value</p><strong className="mt-2 block text-4xl font-extrabold text-[#7C3AED] sm:text-6xl">{currency(model.netValue)}</strong></div><div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2"><Kpi labelText="Program ROI" value={`${Math.round(model.roi)}%`} /><Kpi labelText="Payback Period" value={`${model.paybackMonths} mo`} /></div></section>;
 }
 
 function Scorecard({ model }) {
-  return <section className={card}><Header labelText="3F. 3-Year Summary Scorecard" title="Board-ready outcome — the headline case in four numbers" /><div className="grid grid-cols-2 gap-4"><Kpi labelText="Total 3-Year Net Value" value={currency(model.threeYearNetValue)} /><Kpi labelText="ROI" value={`${Math.round(model.roi)}%`} /><Kpi labelText="Break-even" value={`Month ${model.paybackMonths}`} /><Kpi labelText="Members at Year 3" value={number(model.membersYear3)} /></div></section>;
+  return <section className={card}><Header labelText="3F. 3-Year Summary Scorecard" title="Board-ready outcome — the headline case in four numbers" /><div className="grid grid-cols-1 gap-4 sm:grid-cols-2"><Kpi labelText="Total 3-Year Net Value" value={currency(model.threeYearNetValue)} /><Kpi labelText="ROI" value={`${Math.round(model.roi)}%`} /><Kpi labelText="Break-even" value={`Month ${model.paybackMonths}`} /><Kpi labelText="Members at Year 3" value={number(model.membersYear3)} /></div></section>;
 }
 
 function makeBreakEvenData(model) {
@@ -744,7 +744,7 @@ function makeBreakEvenData(model) {
 }
 
 function ReportSection({ title, children }) {
-  return <section className="border-b border-[#E8E6E1] pb-10"><h3 className="text-3xl font-black tracking-[-0.02em]">{title}</h3><div className="mt-5 text-base leading-7 text-[#4B4B4B]">{children}</div></section>;
+  return <section className="border-b border-[#E8E6E1] pb-8 sm:pb-10"><h3 className="text-2xl font-black tracking-[-0.02em] sm:text-3xl">{title}</h3><div className="mt-5 text-base leading-7 text-[#4B4B4B]">{children}</div></section>;
 }
 
 function NextStep({ numberText, text, time }) {
