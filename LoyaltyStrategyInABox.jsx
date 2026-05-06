@@ -44,6 +44,29 @@ const DATA = {
     "Member Journey",
     "Data & Roadmap",
   ],
+  maturity: {
+    currentScore: 56,
+    executiveDemoScore: 78,
+    targetScore: 72,
+    band: "Strategic decision-support prototype",
+    targetBand: "Loyalty intelligence operating system",
+    levers: [
+      { name: "AI copilot layer", score: "2/10 today", lift: "+14 pts", action: "Conversational strategy editing, recommendation rationale, and next-best-action generation." },
+      { name: "Live data grounding", score: "4.5/10 today", lift: "+9 pts", action: "Connect POS, ecommerce, CRM, ESP, and loyalty platform data with source lineage." },
+      { name: "Workflow execution", score: "5/10 today", lift: "+8 pts", action: "Push segments, journeys, and offers into CRM, ESP, and loyalty platforms." },
+      { name: "Governance and observability", score: "4/10 today", lift: "+6 pts", action: "Add assumption audit trails, confidence bands, roles, and model performance monitoring." },
+    ],
+    trustControls: [
+      { label: "Source Lineage", status: "Modeled", detail: "Current demo uses industry-modeled customer data; production would tag every metric to POS, ecommerce, CRM, or ESP source tables." },
+      { label: "Assumption Audit", status: "Visible", detail: "Sensitivity levers expose enrollment, churn, AOV, and redemption assumptions so the CFO can challenge the model live." },
+      { label: "Execution Readiness", status: "Next", detail: "The next build should export cohorts and journeys into front-office systems rather than stopping at recommendation." },
+    ],
+    copilotPrompts: [
+      "What should we tell the CEO first?",
+      "Where is the financial model most sensitive?",
+      "What would make this production-ready?",
+    ],
+  },
   diagnostic: {
     opportunityScore: 82,
     verdict:
@@ -306,6 +329,7 @@ export default function LoyaltyStrategyInABox() {
   const [sliderValues, setSliderValues] = useState(DATA.businessCase.scenarios["Base Case"]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDataModalOpen, setIsDataModalOpen] = useState(false);
+  const [activeCopilotPrompt, setActiveCopilotPrompt] = useState(DATA.maturity.copilotPrompts[0]);
 
   const model = useMemo(() => calculateModel(sliderValues), [sliderValues]);
   const selectedProgram = DATA.program.types.find((type) => type.id === selectedProgramType);
@@ -352,6 +376,15 @@ export default function LoyaltyStrategyInABox() {
           </div>
         </nav>
 
+        <IntelligenceLayer
+          activeCopilotPrompt={activeCopilotPrompt}
+          activeTab={activeTab}
+          model={model}
+          selectedProgram={selectedProgram}
+          setActiveCopilotPrompt={setActiveCopilotPrompt}
+          sliderValues={sliderValues}
+        />
+
         <section className="pt-6 sm:pt-8">
           {activeTab === "Customer Diagnostic" && <CustomerDiagnostic />}
           {activeTab === "Program Design" && <ProgramDesign selectedProgram={selectedProgram} selectedProgramType={selectedProgramType} setSelectedProgramType={setSelectedProgramType} />}
@@ -374,6 +407,70 @@ function ModuleHeader({ eyebrow, title, subtitle }) {
       <h2 className="mt-2 text-3xl font-black tracking-[-0.02em] text-[#1A1A1A] sm:text-4xl">{title}</h2>
       <p className="mt-3 text-base text-[#4B4B4B] sm:text-lg">{subtitle}</p>
     </header>
+  );
+}
+
+function IntelligenceLayer({ activeCopilotPrompt, activeTab, model, selectedProgram, setActiveCopilotPrompt, sliderValues }) {
+  const answer = getCopilotAnswer(activeCopilotPrompt, { activeTab, model, selectedProgram, sliderValues });
+
+  return (
+    <section className="mt-5 grid grid-cols-1 gap-4 lg:grid-cols-[0.78fr_1.22fr]">
+      <article className="rounded-2xl border border-[#E8E6E1] bg-white p-4 shadow-[0_1px_4px_rgba(0,0,0,0.06)] sm:p-5">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <p className={label}>Front Office AI Maturity</p>
+            <h2 className="mt-1 text-2xl font-black tracking-[-0.02em] sm:text-3xl">{DATA.maturity.currentScore}/100</h2>
+          </div>
+          <span className="rounded-full bg-[#F3F0FF] px-3 py-2 text-xs font-extrabold text-[#5B21B6]">{DATA.maturity.band}</span>
+        </div>
+        <div className="mt-4 h-2.5 overflow-hidden rounded-full bg-[#EDE9FE]">
+          <div className="h-full rounded-full bg-[#7C3AED]" style={{ width: `${DATA.maturity.currentScore}%` }} />
+        </div>
+        <div className="mt-4 grid grid-cols-2 gap-3">
+          <Kpi labelText="Executive Demo" value={`${DATA.maturity.executiveDemoScore}/100`} />
+          <Kpi labelText="Next Target" value={`${DATA.maturity.targetScore}/100`} />
+        </div>
+        <p className="mt-4 text-sm leading-6 text-[#4B4B4B]">
+          The product is already boardroom-credible. The next maturity jump comes from making it grounded, conversational, governable, and executable.
+        </p>
+      </article>
+
+      <article className="rounded-2xl border border-[#E8E6E1] bg-[#F7F6F3] p-4 shadow-[0_1px_4px_rgba(0,0,0,0.06)] sm:p-5">
+        <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
+          <div>
+            <p className={label}>AI Strategy Copilot Preview</p>
+            <h2 className="mt-1 text-2xl font-black tracking-[-0.02em] sm:text-3xl">Recommendation reasoning, not just reporting</h2>
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-[#4B4B4B]">
+              Demo-safe simulation of how a production copilot would explain, challenge, and refine the loyalty strategy using live customer signals.
+            </p>
+          </div>
+          <span className="rounded-full bg-white px-3 py-2 text-xs font-extrabold text-[#7C3AED]">Grounded in current module: {activeTab}</span>
+        </div>
+        <div className="mt-5 grid grid-cols-1 gap-4 xl:grid-cols-[260px_1fr]">
+          <div className="space-y-2">
+            {DATA.maturity.copilotPrompts.map((prompt) => (
+              <button
+                className={`w-full rounded-2xl border px-4 py-3 text-left text-sm font-extrabold transition ${activeCopilotPrompt === prompt ? "border-[#7C3AED] bg-[#F3F0FF] text-[#5B21B6]" : "border-[#E8E6E1] bg-white text-[#4B4B4B] hover:border-[#A78BFA]"}`}
+                key={prompt}
+                onClick={() => setActiveCopilotPrompt(prompt)}
+                type="button"
+              >
+                {prompt}
+              </button>
+            ))}
+          </div>
+          <div className="rounded-2xl bg-white p-5">
+            <p className={label}>Copilot Response</p>
+            <p className="mt-3 text-lg font-bold leading-8 text-[#1A1A1A]">{answer.headline}</p>
+            <ul className="mt-4 space-y-3 text-sm leading-6 text-[#4B4B4B]">
+              {answer.points.map((point) => (
+                <li className="rounded-xl bg-[#F7F6F3] p-3" key={point}>{point}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </article>
+    </section>
   );
 }
 
@@ -499,6 +596,18 @@ function BusinessCase({ activeScenario, model, setScenario, setSlider, sliderVal
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">{assumptionTiles(sliderValues).map((item) => <Kpi key={item.labelText} {...item} />)}</div>
         <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2">{[["enrollmentRate", "Enrollment Rate", 25, 65], ["churnReduction", "Churn Reduction", 3, 25], ["aovLift", "AOV Lift", 1, 18], ["redemptionRate", "Redemption Rate", 25, 70]].map(([key, name, min, max]) => <Slider key={key} labelText={name} max={max} min={min} onChange={(value) => setSlider(key, value)} value={sliderValues[key]} />)}</div>
       </section>
+      <section className={card}>
+        <Header labelText="3B. Model Trust Layer" title="Assumption lineage — what the model knows, estimates, and needs to prove" />
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          {DATA.maturity.trustControls.map((control) => (
+            <article className="rounded-2xl bg-[#F7F6F3] p-5" key={control.label}>
+              <span className="rounded-full bg-white px-3 py-1 text-xs font-extrabold text-[#7C3AED]">{control.status}</span>
+              <h4 className="mt-4 text-xl font-extrabold">{control.label}</h4>
+              <p className="mt-2 text-sm leading-6 text-[#4B4B4B]">{control.detail}</p>
+            </article>
+          ))}
+        </div>
+      </section>
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[1.1fr_0.9fr]"><Pnl model={model} /><Scorecard model={model} /></div>
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
         <section className={card}><Header labelText="3D. Model-Attributed LTV Impact" title="Member economics by segment — the incremental lift case" /><ChartBox><ResponsiveContainer><BarChart data={ltvData}><CartesianGrid stroke="#F0EEF8" /><XAxis dataKey="segment" /><YAxis /><Tooltip /><Legend /><Bar dataKey="nonMember" fill="#DDD8F5" name="Non-member" radius={[8, 8, 0, 0]} /><Bar dataKey="member" fill="#7C3AED" name="Member" radius={[8, 8, 0, 0]} /></BarChart></ResponsiveContainer></ChartBox></section>
@@ -565,8 +674,23 @@ function DataRoadmap() {
       <ModuleHeader eyebrow="Module 5" subtitle="Implementation readiness, translated: what must be true to make the model real." title="Data & Roadmap" />
       <section className={card}><Header labelText="5A. Data Readiness Requirements" title="The minimum viable data spine — what we need before strategy becomes executable" /><div className="grid grid-cols-1 gap-4 lg:grid-cols-3">{DATA.roadmap.requirements.map((tier) => <div className="rounded-2xl bg-[#F7F6F3] p-5" key={tier.tier}><p className={label}>{tier.tier}</p><h4 className="mt-2 text-xl font-extrabold">{tier.title}</h4><div className="mt-4 space-y-3">{tier.items.map((item) => <div className="rounded-xl bg-white p-3" key={item.name}><b>{item.name}</b><p className="text-xs text-[#4B4B4B]">{item.source} | {item.format}</p><span className={`mt-2 inline-flex rounded-full px-2 py-1 text-xs font-extrabold ${item.availability === "Green" ? "bg-emerald-50 text-emerald-800" : item.availability === "Amber" ? "bg-amber-50 text-amber-800" : "bg-rose-50 text-rose-800"}`}>{item.availability}</span></div>)}</div></div>)}</div></section>
       <section className={card}><Header labelText="5B. Technology Stack Recommendation" title="Platform fit — the fastest path without overbuying enterprise complexity" /><div className="grid grid-flow-col auto-cols-[220px] gap-4 overflow-x-auto lg:grid-flow-row lg:grid-cols-5">{DATA.roadmap.platforms.map((p) => <div className={`rounded-2xl border p-4 ${p.recommended ? "border-[#7C3AED] bg-[#F3F0FF]" : "border-[#E8E6E1] bg-white"}`} key={p.name}><span className="rounded-full bg-[#EDE9FE] px-2 py-1 text-xs font-extrabold text-[#5B21B6]">{p.recommended ? "Best Fit" : `${p.fit} fit`}</span><h4 className="mt-4 text-xl font-extrabold">{p.name}</h4><p className="mt-2 text-sm text-[#4B4B4B]">{p.bestFor}</p><p className="mt-4 text-sm font-bold">{p.time}</p><p className="text-sm text-[#4B4B4B]">{p.cost}</p></div>)}</div></section>
-      <section className={card}><Header labelText="5C. Implementation Roadmap" title="Execution path — from diagnostic to in-market learning loop" /><div className="space-y-4">{DATA.roadmap.phases.map((phase) => <div className="grid grid-cols-1 gap-4 rounded-2xl bg-[#F7F6F3] p-4 lg:grid-cols-[160px_1fr_320px] lg:items-center lg:gap-5" key={phase.name}><div><b>{phase.name}</b><p className="text-sm text-[#4B4B4B]">{phase.months}</p></div><div className="relative h-5 rounded-full bg-white"><span className="absolute top-1 h-3 rounded-full bg-[#7C3AED]" style={{ left: phase.offset, width: phase.width }} /></div><ul className="list-disc pl-5 text-sm text-[#4B4B4B]">{phase.deliverables.map((d) => <li key={d}>{d}</li>)}</ul></div>)}</div></section>
-      <section className={card}><Header labelText="5D. Team & Governance" title="Operating model — who owns the economics after launch" /><div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">{DATA.roadmap.governance.map((g) => <div className="rounded-2xl bg-[#F7F6F3] p-5" key={g.role}><h4 className="font-extrabold">{g.role}</h4><p className="mt-3 text-sm text-[#4B4B4B]">{g.owner}</p><p className="mt-2 text-xl font-extrabold text-[#7C3AED]">{g.fte}</p></div>)}</div></section>
+      <section className={card}>
+        <Header labelText="5C. Front-Office Activation Layer" title="From strategy deck to operating system — where the next version should execute" />
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-4">
+          {DATA.maturity.levers.map((lever) => (
+            <article className="rounded-2xl border border-[#E8E6E1] bg-[#F7F6F3] p-5" key={lever.name}>
+              <div className="flex items-center justify-between gap-3">
+                <span className="rounded-full bg-white px-3 py-1 text-xs font-extrabold text-[#7C3AED]">{lever.score}</span>
+                <b className="text-sm text-[#065F46]">{lever.lift}</b>
+              </div>
+              <h4 className="mt-4 text-xl font-extrabold">{lever.name}</h4>
+              <p className="mt-2 text-sm leading-6 text-[#4B4B4B]">{lever.action}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+      <section className={card}><Header labelText="5D. Implementation Roadmap" title="Execution path — from diagnostic to in-market learning loop" /><div className="space-y-4">{DATA.roadmap.phases.map((phase) => <div className="grid grid-cols-1 gap-4 rounded-2xl bg-[#F7F6F3] p-4 lg:grid-cols-[160px_1fr_320px] lg:items-center lg:gap-5" key={phase.name}><div><b>{phase.name}</b><p className="text-sm text-[#4B4B4B]">{phase.months}</p></div><div className="relative h-5 rounded-full bg-white"><span className="absolute top-1 h-3 rounded-full bg-[#7C3AED]" style={{ left: phase.offset, width: phase.width }} /></div><ul className="list-disc pl-5 text-sm text-[#4B4B4B]">{phase.deliverables.map((d) => <li key={d}>{d}</li>)}</ul></div>)}</div></section>
+      <section className={card}><Header labelText="5E. Team & Governance" title="Operating model — who owns the economics after launch" /><div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">{DATA.roadmap.governance.map((g) => <div className="rounded-2xl bg-[#F7F6F3] p-5" key={g.role}><h4 className="font-extrabold">{g.role}</h4><p className="mt-3 text-sm text-[#4B4B4B]">{g.owner}</p><p className="mt-2 text-xl font-extrabold text-[#7C3AED]">{g.fte}</p></div>)}</div></section>
     </div>
   );
 }
@@ -677,6 +801,7 @@ function BusinessCaseModal({ model, onClose }) {
         <ReportSection title="The Opportunity"><div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4"><Kpi labelText="Revenue Concentration" value="58%" /><Kpi labelText="Churn Risk" value={DATA.diagnostic.revenueAtRisk} /><Kpi labelText="Candidates" value={DATA.diagnostic.candidateSizing.customers} /><Kpi labelText="Addressable Revenue" value={DATA.diagnostic.candidateSizing.revenue} /></div></ReportSection>
         <ReportSection title="Our Recommendation"><p className="text-2xl font-extrabold text-[#7C3AED]">{DATA.program.recommendation.type}</p><p className="mt-2 font-bold text-[#4B4B4B]">The strategic logic: use status to shift behavior, not discounts to buy transactions.</p><ul className="mt-4 list-disc space-y-2 pl-5">{DATA.program.recommendation.rationale.slice(0, 3).map((r) => <li key={r}>{r}</li>)}</ul></ReportSection>
         <ReportSection title="Financial Model - Base Case"><Pnl model={model} compact /><Scorecard model={model} /></ReportSection>
+        <ReportSection title="AI Product Maturity Readout"><div className="grid grid-cols-1 gap-4 sm:grid-cols-3"><Kpi labelText="Current Maturity" value={`${DATA.maturity.currentScore}/100`} /><Kpi labelText="Executive Demo" value={`${DATA.maturity.executiveDemoScore}/100`} /><Kpi labelText="Next Target" value={`${DATA.maturity.targetScore}/100`} /></div><p className="mt-5">The implication is practical: the strategy case is strong enough for executive alignment, while production readiness depends on live data grounding, workflow execution, governance controls, and closed-loop measurement.</p></ReportSection>
         <ReportSection title="What We Need From You"><div className="space-y-3">{tierOne.map((item) => <label className="flex gap-3 rounded-2xl bg-[#F7F6F3] p-4" key={item.name}><input checked readOnly type="checkbox" /><span><b>{item.name}</b><br /><span className="text-sm text-[#4B4B4B]">{item.source} | {item.format}</span></span></label>)}</div></ReportSection>
         <ReportSection title="Recommended Next Steps"><ol className="grid grid-cols-1 gap-4 md:grid-cols-3"><NextStep numberText="1" text="Data readiness assessment" time="2 weeks" /><NextStep numberText="2" text="Platform RFP and vendor selection" time="4-6 weeks" /><NextStep numberText="3" text="Pilot program design and launch" time="3 months" /></ol></ReportSection>
       </article>
@@ -713,6 +838,39 @@ function ConfigCard({ title, value, lines = [] }) {
 
 function Slider({ labelText, value, min, max, onChange }) {
   return <label className="rounded-2xl bg-[#F7F6F3] p-4 sm:p-5"><span className="flex justify-between gap-3 text-xs font-extrabold uppercase tracking-widest text-[#9A9A9A]">{labelText}<b className="text-[#7C3AED]">{value}%</b></span><input className="mt-4 w-full accent-[#7C3AED]" max={max} min={min} onChange={(e) => onChange(e.target.value)} type="range" value={value} /></label>;
+}
+
+function getCopilotAnswer(prompt, { activeTab, model, selectedProgram, sliderValues }) {
+  if (prompt.includes("CEO")) {
+    return {
+      headline: `${COMPANY.name} has a credible loyalty case now, but the bigger prize is a repeatable customer-value operating system.`,
+      points: [
+        `Lead with retention economics: the current model attributes ${currency(model.netValue)} in annual net value and ${Math.round(model.roi)}% ROI, with payback by month ${model.paybackMonths}.`,
+        `Keep the recommendation simple: ${selectedProgram.name} is the right first architecture because it protects high-value customers without turning loyalty into a blanket discount program.`,
+        `Be transparent on maturity: this is a strong executive demo today; live data grounding and workflow execution are the unlocks that move it toward ${DATA.maturity.targetBand}.`,
+      ],
+    };
+  }
+
+  if (prompt.includes("sensitive")) {
+    return {
+      headline: "The model is most sensitive to enrollment quality, not raw enrollment volume.",
+      points: [
+        `${sliderValues.enrollmentRate}% enrollment only creates value if ${sliderValues.engagementRate}% of those members stay active; that is the difference between a funded engagement layer and a costly points bank.`,
+        `AOV lift at +${sliderValues.aovLift}% and churn reduction at -${sliderValues.churnReduction}% are the primary value levers. The CFO should pressure-test both with cohort holdouts after launch.`,
+        `Redemption rate at ${sliderValues.redemptionRate}% is healthy, but it must be monitored as redemption liability. High redemption is good engagement until it outruns margin discipline.`,
+      ],
+    };
+  }
+
+  return {
+    headline: `The next build should turn ${activeTab} from an insight surface into an action surface.`,
+    points: [
+      "Connect source systems first: POS, ecommerce, CRM, ESP, loyalty platform, and finance tables need customer-level identity resolution and metric lineage.",
+      "Add copilot workflows next: ask questions, rewrite recommendations, generate segments, produce campaign briefs, and explain assumption changes in real time.",
+      "Close the loop last: push audiences and journeys into front-office tools, measure lift against control groups, and recalibrate the model as actual performance arrives.",
+    ],
+  };
 }
 
 function assumptionTiles(a) {
