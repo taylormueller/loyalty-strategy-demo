@@ -61,11 +61,6 @@ const DATA = {
       { label: "Assumption Audit", status: "Visible", detail: "Sensitivity levers expose enrollment, churn, AOV, and redemption assumptions so the CFO can challenge the model live." },
       { label: "Execution Readiness", status: "Next", detail: "The next build should export cohorts and journeys into front-office systems rather than stopping at recommendation." },
     ],
-    copilotPrompts: [
-      "What should we tell the CEO first?",
-      "Where is the financial model most sensitive?",
-      "How should real data and AI change this?",
-    ],
   },
   diagnostic: {
     opportunityScore: 82,
@@ -329,7 +324,6 @@ export default function LoyaltyStrategyInABox() {
   const [sliderValues, setSliderValues] = useState(DATA.businessCase.scenarios["Base Case"]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDataModalOpen, setIsDataModalOpen] = useState(false);
-  const [activeCopilotPrompt, setActiveCopilotPrompt] = useState(DATA.maturity.copilotPrompts[0]);
 
   const model = useMemo(() => calculateModel(sliderValues), [sliderValues]);
   const selectedProgram = DATA.program.types.find((type) => type.id === selectedProgramType);
@@ -376,15 +370,6 @@ export default function LoyaltyStrategyInABox() {
           </div>
         </nav>
 
-        <IntelligenceLayer
-          activeCopilotPrompt={activeCopilotPrompt}
-          activeTab={activeTab}
-          model={model}
-          selectedProgram={selectedProgram}
-          setActiveCopilotPrompt={setActiveCopilotPrompt}
-          sliderValues={sliderValues}
-        />
-
         <section className="pt-6 sm:pt-8">
           {activeTab === "Customer Diagnostic" && <CustomerDiagnostic />}
           {activeTab === "Program Design" && <ProgramDesign selectedProgram={selectedProgram} selectedProgramType={selectedProgramType} setSelectedProgramType={setSelectedProgramType} />}
@@ -410,66 +395,34 @@ function ModuleHeader({ eyebrow, title, subtitle }) {
   );
 }
 
-function IntelligenceLayer({ activeCopilotPrompt, activeTab, model, selectedProgram, setActiveCopilotPrompt, sliderValues }) {
-  const answer = getCopilotAnswer(activeCopilotPrompt, { activeTab, model, selectedProgram, sliderValues });
+function CopilotInsights({ insights }) {
+  const [activeInsight, setActiveInsight] = useState(insights[0]);
 
   return (
-    <section className="mt-5 grid grid-cols-1 gap-4 lg:grid-cols-[0.78fr_1.22fr]">
-      <article className="rounded-2xl border border-[#E8E6E1] bg-white p-4 shadow-[0_1px_4px_rgba(0,0,0,0.06)] sm:p-5">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <p className={label}>Front Office AI Maturity</p>
-            <h2 className="mt-1 text-2xl font-black tracking-[-0.02em] sm:text-3xl">{DATA.maturity.currentScore}/100</h2>
-          </div>
-          <span className="rounded-full bg-[#F3F0FF] px-3 py-2 text-xs font-extrabold text-[#5B21B6]">{DATA.maturity.band}</span>
+    <section className="rounded-2xl border border-[#E8E6E1] bg-[#F7F6F3] p-4 shadow-[0_1px_4px_rgba(0,0,0,0.06)] sm:p-5">
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+        <div>
+          <p className={label}>Copilot Insight</p>
+          <h3 className="mt-1 text-2xl font-black tracking-[-0.02em] text-[#1A1A1A]">What this data means</h3>
+          <p className="mt-2 max-w-3xl text-sm leading-6 text-[#4B4B4B]">Use these prompts as a guided readout for the data on this page.</p>
         </div>
-        <div className="mt-4 h-2.5 overflow-hidden rounded-full bg-[#EDE9FE]">
-          <div className="h-full rounded-full bg-[#7C3AED]" style={{ width: `${DATA.maturity.currentScore}%` }} />
+        <div className="flex flex-wrap gap-2">
+          {insights.map((insight) => (
+            <button
+              className={`rounded-2xl border px-4 py-2 text-sm font-extrabold transition ${activeInsight.prompt === insight.prompt ? "border-[#7C3AED] bg-[#F3F0FF] text-[#5B21B6]" : "border-[#E8E6E1] bg-white text-[#4B4B4B] hover:border-[#A78BFA]"}`}
+              key={insight.prompt}
+              onClick={() => setActiveInsight(insight)}
+              type="button"
+            >
+              {insight.prompt}
+            </button>
+          ))}
         </div>
-        <div className="mt-4 grid grid-cols-2 gap-3">
-          <Kpi labelText="Executive Demo" value={`${DATA.maturity.executiveDemoScore}/100`} />
-          <Kpi labelText="Next Target" value={`${DATA.maturity.targetScore}/100`} />
-        </div>
-        <p className="mt-4 text-sm leading-6 text-[#4B4B4B]">
-          The product is already boardroom-credible. The next maturity jump comes from making it grounded in real customer data and more conversational in how it reasons.
-        </p>
-      </article>
-
-      <article className="rounded-2xl border border-[#E8E6E1] bg-[#F7F6F3] p-4 shadow-[0_1px_4px_rgba(0,0,0,0.06)] sm:p-5">
-        <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
-          <div>
-            <p className={label}>AI Strategy Copilot Preview</p>
-            <h2 className="mt-1 text-2xl font-black tracking-[-0.02em] sm:text-3xl">Recommendation reasoning, not just reporting</h2>
-            <p className="mt-2 max-w-3xl text-sm leading-6 text-[#4B4B4B]">
-              Demo-safe simulation of how an AI layer would explain, challenge, and refine the loyalty strategy once customer data is ingested.
-            </p>
-          </div>
-          <span className="rounded-full bg-white px-3 py-2 text-xs font-extrabold text-[#7C3AED]">Grounded in current module: {activeTab}</span>
-        </div>
-        <div className="mt-5 grid grid-cols-1 gap-4 xl:grid-cols-[260px_1fr]">
-          <div className="space-y-2">
-            {DATA.maturity.copilotPrompts.map((prompt) => (
-              <button
-                className={`w-full rounded-2xl border px-4 py-3 text-left text-sm font-extrabold transition ${activeCopilotPrompt === prompt ? "border-[#7C3AED] bg-[#F3F0FF] text-[#5B21B6]" : "border-[#E8E6E1] bg-white text-[#4B4B4B] hover:border-[#A78BFA]"}`}
-                key={prompt}
-                onClick={() => setActiveCopilotPrompt(prompt)}
-                type="button"
-              >
-                {prompt}
-              </button>
-            ))}
-          </div>
-          <div className="rounded-2xl bg-white p-5">
-            <p className={label}>Copilot Response</p>
-            <p className="mt-3 text-lg font-bold leading-8 text-[#1A1A1A]">{answer.headline}</p>
-            <ul className="mt-4 space-y-3 text-sm leading-6 text-[#4B4B4B]">
-              {answer.points.map((point) => (
-                <li className="rounded-xl bg-[#F7F6F3] p-3" key={point}>{point}</li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </article>
+      </div>
+      <div className="mt-5 rounded-2xl bg-white p-5">
+        <p className="text-lg font-extrabold leading-8 text-[#1A1A1A]">{activeInsight.headline}</p>
+        <p className="mt-3 text-sm leading-6 text-[#4B4B4B]">{activeInsight.body}</p>
+      </div>
     </section>
   );
 }
@@ -479,6 +432,7 @@ function CustomerDiagnostic() {
   return (
     <div className="space-y-6">
       <ModuleHeader eyebrow="Module 1" subtitle="Program candidacy, translated: where loyalty can create real incremental lift." title="Customer Diagnostic" />
+      <CopilotInsights insights={customerDiagnosticInsights(top20)} />
       <section className={`${card} grid grid-cols-1 items-center gap-6 bg-gradient-to-r from-[#F3F0FF] to-white lg:grid-cols-[0.6fr_1fr] lg:gap-8`}>
         <div>
           <p className={label}>Loyalty Opportunity Score</p>
@@ -550,6 +504,7 @@ function ProgramDesign({ selectedProgram, selectedProgramType, setSelectedProgra
   return (
     <div className="space-y-6">
       <ModuleHeader eyebrow="Module 2" subtitle="Engagement architecture, translated: the program design most likely to change behavior." title="Program Design" />
+      <CopilotInsights insights={programDesignInsights(selectedProgram)} />
       <section className={`${card} grid grid-cols-1 gap-6 bg-gradient-to-r from-[#F3F0FF] to-white lg:grid-cols-[0.8fr_1.2fr] lg:gap-8`}>
         <div><p className={label}>2A. Recommended Engagement Architecture</p><h3 className="mt-2 text-3xl font-extrabold sm:text-4xl">{DATA.program.recommendation.type}</h3><p className="mt-4 inline-flex rounded-full bg-emerald-50 px-3 py-2 text-sm font-extrabold text-emerald-800">{DATA.program.recommendation.confidence}</p></div>
         <ul className="list-disc space-y-2 pl-5 text-[#4B4B4B]">{DATA.program.recommendation.rationale.map((item) => <li key={item}>{item}</li>)}</ul>
@@ -587,6 +542,7 @@ function BusinessCase({ activeScenario, model, setScenario, setSlider, sliderVal
   return (
     <div className="space-y-6">
       <ModuleHeader eyebrow="Module 3" subtitle="Retention economics, translated: how the program pays back and where the risk sits." title="Business Case" />
+      <CopilotInsights insights={businessCaseInsights(model, sliderValues)} />
       <section className={card}>
         <Header labelText="3A. Scenario Selector" title="Choose the financial posture — conservative, base, or upside case" />
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">{Object.keys(DATA.businessCase.scenarios).map((scenario) => <button className={`rounded-2xl border p-4 text-left ${activeScenario === scenario ? "border-[#7C3AED] bg-[#F3F0FF]" : "border-[#E8E6E1]"}`} key={scenario} onClick={() => setScenario(scenario)} type="button"><strong>{scenario}</strong><p className="mt-1 text-sm text-[#9A9A9A]">{DATA.businessCase.scenarios[scenario].enrollmentRate}% enrollment</p></button>)}</div>
@@ -621,6 +577,7 @@ function MemberJourney() {
   return (
     <div className="space-y-6">
       <ModuleHeader eyebrow="Module 4" subtitle="Journey orchestration, translated: when to act, through which channel, and why." title="Member Journey" />
+      <CopilotInsights insights={memberJourneyInsights()} />
       <section className={card}>
         <Header labelText="4A. Enrollment Activation Curve" title="From eligible audience to advocates — the activation curve" />
         <ActivationCurve />
@@ -672,6 +629,7 @@ function DataRoadmap() {
   return (
     <div className="space-y-6">
       <ModuleHeader eyebrow="Module 5" subtitle="Implementation readiness, translated: what must be true to make the model real." title="Data & Roadmap" />
+      <CopilotInsights insights={dataRoadmapInsights()} />
       <section className={card}><Header labelText="5A. Data Readiness Requirements" title="The minimum viable data spine — what we need before strategy becomes executable" /><div className="grid grid-cols-1 gap-4 lg:grid-cols-3">{DATA.roadmap.requirements.map((tier) => <div className="rounded-2xl bg-[#F7F6F3] p-5" key={tier.tier}><p className={label}>{tier.tier}</p><h4 className="mt-2 text-xl font-extrabold">{tier.title}</h4><div className="mt-4 space-y-3">{tier.items.map((item) => <div className="rounded-xl bg-white p-3" key={item.name}><b>{item.name}</b><p className="text-xs text-[#4B4B4B]">{item.source} | {item.format}</p><span className={`mt-2 inline-flex rounded-full px-2 py-1 text-xs font-extrabold ${item.availability === "Green" ? "bg-emerald-50 text-emerald-800" : item.availability === "Amber" ? "bg-amber-50 text-amber-800" : "bg-rose-50 text-rose-800"}`}>{item.availability}</span></div>)}</div></div>)}</div></section>
       <section className={card}><Header labelText="5B. Technology Stack Recommendation" title="Platform fit — the fastest path without overbuying enterprise complexity" /><div className="grid grid-flow-col auto-cols-[220px] gap-4 overflow-x-auto lg:grid-flow-row lg:grid-cols-5">{DATA.roadmap.platforms.map((p) => <div className={`rounded-2xl border p-4 ${p.recommended ? "border-[#7C3AED] bg-[#F3F0FF]" : "border-[#E8E6E1] bg-white"}`} key={p.name}><span className="rounded-full bg-[#EDE9FE] px-2 py-1 text-xs font-extrabold text-[#5B21B6]">{p.recommended ? "Best Fit" : `${p.fit} fit`}</span><h4 className="mt-4 text-xl font-extrabold">{p.name}</h4><p className="mt-2 text-sm text-[#4B4B4B]">{p.bestFor}</p><p className="mt-4 text-sm font-bold">{p.time}</p><p className="text-sm text-[#4B4B4B]">{p.cost}</p></div>)}</div></section>
       <section className={card}>
@@ -840,37 +798,104 @@ function Slider({ labelText, value, min, max, onChange }) {
   return <label className="rounded-2xl bg-[#F7F6F3] p-4 sm:p-5"><span className="flex justify-between gap-3 text-xs font-extrabold uppercase tracking-widest text-[#9A9A9A]">{labelText}<b className="text-[#7C3AED]">{value}%</b></span><input className="mt-4 w-full accent-[#7C3AED]" max={max} min={min} onChange={(e) => onChange(e.target.value)} type="range" value={value} /></label>;
 }
 
-function getCopilotAnswer(prompt, { activeTab, model, selectedProgram, sliderValues }) {
-  if (prompt.includes("CEO")) {
-    return {
-      headline: `${COMPANY.name} has a credible loyalty case now, and the next unlock is making the recommendations data-grounded rather than purely modeled.`,
-      points: [
-        `Lead with retention economics: the current model attributes ${currency(model.netValue)} in annual net value and ${Math.round(model.roi)}% ROI, with payback by month ${model.paybackMonths}.`,
-        `Keep the recommendation simple: ${selectedProgram.name} is the right first architecture because it protects high-value customers without turning loyalty into a blanket discount program.`,
-        `Be transparent on maturity: this is a strong executive demo today; real data ingestion and an AI reasoning layer are the unlocks that move it toward a ${DATA.maturity.targetBand}.`,
-      ],
-    };
-  }
+function customerDiagnosticInsights(top20) {
+  return [
+    {
+      prompt: "Where is the opportunity?",
+      headline: "The loyalty case is concentrated in repeat buyers, not the full file.",
+      body: `The top 20% of customers generate ${top20}% of revenue, which means the first job of the program is protection and expansion of high-value households. In practical terms: do not spend evenly across all customers; fund the cohorts where retention economics are already strongest.`,
+    },
+    {
+      prompt: "What is the risk?",
+      headline: "The avoidable leakage pool is large enough to matter to the P&L.",
+      body: `${DATA.diagnostic.revenueAtRisk} in annual revenue is sitting in at-risk and lapsed behavior. The strategic move is not a generic win-back blast; it is earlier intervention before the seasonal purchase window closes.`,
+    },
+    {
+      prompt: "What should we prove next?",
+      headline: "Validate whether the candidate pool is reachable, not just valuable.",
+      body: `${DATA.diagnostic.candidateSizing.customers} customers look behaviorally ready for a structured program. The next proof point is contactability: email/SMS opt-in, store associate capture, and whether these customers respond to tier-progress messaging.`,
+    },
+  ];
+}
 
-  if (prompt.includes("sensitive")) {
-    return {
-      headline: "The model is most sensitive to enrollment quality, not raw enrollment volume.",
-      points: [
-        `${sliderValues.enrollmentRate}% enrollment only creates value if ${sliderValues.engagementRate}% of those members stay active; that is the difference between a funded engagement layer and a costly points bank.`,
-        `AOV lift at +${sliderValues.aovLift}% and churn reduction at -${sliderValues.churnReduction}% are the primary value levers. The CFO should pressure-test both with cohort holdouts after launch.`,
-        `Redemption rate at ${sliderValues.redemptionRate}% is healthy, but it must be monitored as redemption liability. High redemption is good engagement until it outruns margin discipline.`,
-      ],
-    };
-  }
+function programDesignInsights(selectedProgram) {
+  return [
+    {
+      prompt: "Why this design?",
+      headline: `${selectedProgram.name} is the strongest fit because the brand needs motivation, not more markdowns.`,
+      body: "The diagnostic shows a meaningful gap between high-value and low-frequency customers. Status gives Ridge & Roam a way to create progression, recognition, and service benefits without training customers to wait for discounts.",
+    },
+    {
+      prompt: "What could go wrong?",
+      headline: "The main design risk is complexity at launch.",
+      body: "A tiered architecture only works if customers and store teams can explain it in one breath. The first version should keep tier thresholds, benefits, and earning rules simple enough to support in-store, email, and post-purchase onboarding.",
+    },
+    {
+      prompt: "What would AI improve?",
+      headline: "AI should help tune thresholds and benefits by segment.",
+      body: "Once real data is ingested, the copilot can pressure-test which benefits move which cohorts, identify customers near a tier boundary, and suggest campaign briefs for customers most likely to change behavior.",
+    },
+  ];
+}
 
-  return {
-    headline: `The next build should make ${activeTab} feel more alive through real data ingestion and AI-assisted iteration.`,
-    points: [
-      "Start with file-based ingestion before live connectors: map POS, ecommerce, CRM, ESP, and margin exports into one customer-level analysis layer.",
-      "Add copilot workflows next: ask questions, rewrite recommendations, generate segment briefs, and explain assumption changes in real time.",
-      "Use confidence bands and source labels so users can tell the difference between observed behavior, modeled lift, and partner judgment.",
-    ],
-  };
+function businessCaseInsights(model, sliderValues) {
+  return [
+    {
+      prompt: "What drives ROI?",
+      headline: "The model is most sensitive to quality of engagement, not enrollment volume alone.",
+      body: `${sliderValues.enrollmentRate}% enrollment is valuable only if members stay active and change behavior. The current case attributes ${currency(model.netValue)} in annual net value, but the executive conversation should focus on churn reduction, AOV lift, and active member rate.`,
+    },
+    {
+      prompt: "What should CFO challenge?",
+      headline: "Pressure-test the lift assumptions before debating program polish.",
+      body: `AOV lift at +${sliderValues.aovLift}% and churn reduction at -${sliderValues.churnReduction}% are the economic spine of the case. The right next step is a holdout design that separates modeled incremental lift from revenue that would have happened anyway.`,
+    },
+    {
+      prompt: "Is liability controlled?",
+      headline: "Redemption liability is manageable if earn and burn stay tied to margin discipline.",
+      body: `A ${sliderValues.redemptionRate}% redemption rate signals healthy engagement, but it also needs finance ownership. The program should track outstanding points, breakage, and margin by category from day one.`,
+    },
+  ];
+}
+
+function memberJourneyInsights() {
+  return [
+    {
+      prompt: "Where does the journey break?",
+      headline: "The biggest risk is the handoff from awareness to enrollment.",
+      body: "Customers may like the idea of rewards but fail to join unless the ask appears in the purchase flow, store conversation, and post-purchase email. The launch plan should over-invest in the first 30 days of onboarding.",
+    },
+    {
+      prompt: "Which triggers matter most?",
+      headline: "Tier progress and inactivity triggers are the highest-value moments.",
+      body: "Progress moments create motivation when customers are already engaged. Inactivity moments protect revenue before a customer becomes expensive to win back. Those two trigger families should be built before nice-to-have celebration messages.",
+    },
+    {
+      prompt: "How should channels be used?",
+      headline: "Channel choice should follow intent, not internal preference.",
+      body: "Email is strong for storytelling and education, push is better for progress nudges, SMS should be reserved for high-urgency save moments, and in-store associate prompts matter most when identity capture is incomplete.",
+    },
+  ];
+}
+
+function dataRoadmapInsights() {
+  return [
+    {
+      prompt: "What data matters first?",
+      headline: "Transaction history and customer identity are the spine of the analysis.",
+      body: "Before adding richer signals, the team needs clean customer-level transactions, SKU detail, and a reliable customer ID. Without that spine, segmentation, lapse analysis, and program economics become attractive but fragile.",
+    },
+    {
+      prompt: "Where does AI help?",
+      headline: "AI is most useful after the data is mapped, not before.",
+      body: "The copilot should interpret patterns, explain tradeoffs, draft recommendations, and generate segment briefs. It should not mask messy source data. Clean ingestion gives the AI something trustworthy to reason over.",
+    },
+    {
+      prompt: "What is the first build?",
+      headline: "Start with file-based ingestion and evidence labels.",
+      body: "The practical next version should let a user upload POS, ecommerce, CRM, ESP, and margin exports, map fields into a customer spine, and label every insight as observed, modeled, or partner judgment.",
+    },
+  ];
 }
 
 function assumptionTiles(a) {
