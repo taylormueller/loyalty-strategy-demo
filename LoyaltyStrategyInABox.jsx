@@ -49,12 +49,12 @@ const DATA = {
     executiveDemoScore: 78,
     targetScore: 72,
     band: "Strategic decision-support prototype",
-    targetBand: "Loyalty intelligence operating system",
+    targetBand: "data-grounded AI strategy workspace",
     levers: [
-      { name: "AI copilot layer", score: "2/10 today", lift: "+14 pts", action: "Conversational strategy editing, recommendation rationale, and next-best-action generation." },
-      { name: "Live data grounding", score: "4.5/10 today", lift: "+9 pts", action: "Connect POS, ecommerce, CRM, ESP, and loyalty platform data with source lineage." },
-      { name: "Workflow execution", score: "5/10 today", lift: "+8 pts", action: "Push segments, journeys, and offers into CRM, ESP, and loyalty platforms." },
-      { name: "Governance and observability", score: "4/10 today", lift: "+6 pts", action: "Add assumption audit trails, confidence bands, roles, and model performance monitoring." },
+      { name: "Data ingestion layer", score: "4.5/10 today", lift: "+11 pts", action: "Import POS, ecommerce, CRM, ESP, and SKU-margin files into a mapped customer spine." },
+      { name: "AI strategy copilot", score: "2/10 today", lift: "+14 pts", action: "Let users ask questions, challenge assumptions, rewrite recommendations, and generate client-ready rationale." },
+      { name: "Evidence and confidence", score: "4/10 today", lift: "+7 pts", action: "Show metric lineage, confidence ranges, and which conclusions are modeled versus observed." },
+      { name: "Action brief generation", score: "5/10 today", lift: "+6 pts", action: "Generate segment briefs, lifecycle campaign briefs, and test plans that teams can take into existing tools." },
     ],
     trustControls: [
       { label: "Source Lineage", status: "Modeled", detail: "Current demo uses industry-modeled customer data; production would tag every metric to POS, ecommerce, CRM, or ESP source tables." },
@@ -64,7 +64,7 @@ const DATA = {
     copilotPrompts: [
       "What should we tell the CEO first?",
       "Where is the financial model most sensitive?",
-      "What would make this production-ready?",
+      "How should real data and AI change this?",
     ],
   },
   diagnostic: {
@@ -431,7 +431,7 @@ function IntelligenceLayer({ activeCopilotPrompt, activeTab, model, selectedProg
           <Kpi labelText="Next Target" value={`${DATA.maturity.targetScore}/100`} />
         </div>
         <p className="mt-4 text-sm leading-6 text-[#4B4B4B]">
-          The product is already boardroom-credible. The next maturity jump comes from making it grounded, conversational, governable, and executable.
+          The product is already boardroom-credible. The next maturity jump comes from making it grounded in real customer data and more conversational in how it reasons.
         </p>
       </article>
 
@@ -441,7 +441,7 @@ function IntelligenceLayer({ activeCopilotPrompt, activeTab, model, selectedProg
             <p className={label}>AI Strategy Copilot Preview</p>
             <h2 className="mt-1 text-2xl font-black tracking-[-0.02em] sm:text-3xl">Recommendation reasoning, not just reporting</h2>
             <p className="mt-2 max-w-3xl text-sm leading-6 text-[#4B4B4B]">
-              Demo-safe simulation of how a production copilot would explain, challenge, and refine the loyalty strategy using live customer signals.
+              Demo-safe simulation of how an AI layer would explain, challenge, and refine the loyalty strategy once customer data is ingested.
             </p>
           </div>
           <span className="rounded-full bg-white px-3 py-2 text-xs font-extrabold text-[#7C3AED]">Grounded in current module: {activeTab}</span>
@@ -675,7 +675,7 @@ function DataRoadmap() {
       <section className={card}><Header labelText="5A. Data Readiness Requirements" title="The minimum viable data spine — what we need before strategy becomes executable" /><div className="grid grid-cols-1 gap-4 lg:grid-cols-3">{DATA.roadmap.requirements.map((tier) => <div className="rounded-2xl bg-[#F7F6F3] p-5" key={tier.tier}><p className={label}>{tier.tier}</p><h4 className="mt-2 text-xl font-extrabold">{tier.title}</h4><div className="mt-4 space-y-3">{tier.items.map((item) => <div className="rounded-xl bg-white p-3" key={item.name}><b>{item.name}</b><p className="text-xs text-[#4B4B4B]">{item.source} | {item.format}</p><span className={`mt-2 inline-flex rounded-full px-2 py-1 text-xs font-extrabold ${item.availability === "Green" ? "bg-emerald-50 text-emerald-800" : item.availability === "Amber" ? "bg-amber-50 text-amber-800" : "bg-rose-50 text-rose-800"}`}>{item.availability}</span></div>)}</div></div>)}</div></section>
       <section className={card}><Header labelText="5B. Technology Stack Recommendation" title="Platform fit — the fastest path without overbuying enterprise complexity" /><div className="grid grid-flow-col auto-cols-[220px] gap-4 overflow-x-auto lg:grid-flow-row lg:grid-cols-5">{DATA.roadmap.platforms.map((p) => <div className={`rounded-2xl border p-4 ${p.recommended ? "border-[#7C3AED] bg-[#F3F0FF]" : "border-[#E8E6E1] bg-white"}`} key={p.name}><span className="rounded-full bg-[#EDE9FE] px-2 py-1 text-xs font-extrabold text-[#5B21B6]">{p.recommended ? "Best Fit" : `${p.fit} fit`}</span><h4 className="mt-4 text-xl font-extrabold">{p.name}</h4><p className="mt-2 text-sm text-[#4B4B4B]">{p.bestFor}</p><p className="mt-4 text-sm font-bold">{p.time}</p><p className="text-sm text-[#4B4B4B]">{p.cost}</p></div>)}</div></section>
       <section className={card}>
-        <Header labelText="5C. Front-Office Activation Layer" title="From strategy deck to operating system — where the next version should execute" />
+        <Header labelText="5C. Data + AI Maturity Layer" title="From modeled strategy to data-grounded recommendations" />
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-4">
           {DATA.maturity.levers.map((lever) => (
             <article className="rounded-2xl border border-[#E8E6E1] bg-[#F7F6F3] p-5" key={lever.name}>
@@ -801,7 +801,7 @@ function BusinessCaseModal({ model, onClose }) {
         <ReportSection title="The Opportunity"><div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4"><Kpi labelText="Revenue Concentration" value="58%" /><Kpi labelText="Churn Risk" value={DATA.diagnostic.revenueAtRisk} /><Kpi labelText="Candidates" value={DATA.diagnostic.candidateSizing.customers} /><Kpi labelText="Addressable Revenue" value={DATA.diagnostic.candidateSizing.revenue} /></div></ReportSection>
         <ReportSection title="Our Recommendation"><p className="text-2xl font-extrabold text-[#7C3AED]">{DATA.program.recommendation.type}</p><p className="mt-2 font-bold text-[#4B4B4B]">The strategic logic: use status to shift behavior, not discounts to buy transactions.</p><ul className="mt-4 list-disc space-y-2 pl-5">{DATA.program.recommendation.rationale.slice(0, 3).map((r) => <li key={r}>{r}</li>)}</ul></ReportSection>
         <ReportSection title="Financial Model - Base Case"><Pnl model={model} compact /><Scorecard model={model} /></ReportSection>
-        <ReportSection title="AI Product Maturity Readout"><div className="grid grid-cols-1 gap-4 sm:grid-cols-3"><Kpi labelText="Current Maturity" value={`${DATA.maturity.currentScore}/100`} /><Kpi labelText="Executive Demo" value={`${DATA.maturity.executiveDemoScore}/100`} /><Kpi labelText="Next Target" value={`${DATA.maturity.targetScore}/100`} /></div><p className="mt-5">The implication is practical: the strategy case is strong enough for executive alignment, while production readiness depends on live data grounding, workflow execution, governance controls, and closed-loop measurement.</p></ReportSection>
+        <ReportSection title="AI Product Maturity Readout"><div className="grid grid-cols-1 gap-4 sm:grid-cols-3"><Kpi labelText="Current Maturity" value={`${DATA.maturity.currentScore}/100`} /><Kpi labelText="Executive Demo" value={`${DATA.maturity.executiveDemoScore}/100`} /><Kpi labelText="Next Target" value={`${DATA.maturity.targetScore}/100`} /></div><p className="mt-5">The implication is practical: the strategy case is strong enough for executive alignment. The highest-value next step is not platform administration; it is ingesting real customer data and adding an AI layer that can interrogate, explain, and refine the recommendation.</p></ReportSection>
         <ReportSection title="What We Need From You"><div className="space-y-3">{tierOne.map((item) => <label className="flex gap-3 rounded-2xl bg-[#F7F6F3] p-4" key={item.name}><input checked readOnly type="checkbox" /><span><b>{item.name}</b><br /><span className="text-sm text-[#4B4B4B]">{item.source} | {item.format}</span></span></label>)}</div></ReportSection>
         <ReportSection title="Recommended Next Steps"><ol className="grid grid-cols-1 gap-4 md:grid-cols-3"><NextStep numberText="1" text="Data readiness assessment" time="2 weeks" /><NextStep numberText="2" text="Platform RFP and vendor selection" time="4-6 weeks" /><NextStep numberText="3" text="Pilot program design and launch" time="3 months" /></ol></ReportSection>
       </article>
@@ -843,11 +843,11 @@ function Slider({ labelText, value, min, max, onChange }) {
 function getCopilotAnswer(prompt, { activeTab, model, selectedProgram, sliderValues }) {
   if (prompt.includes("CEO")) {
     return {
-      headline: `${COMPANY.name} has a credible loyalty case now, but the bigger prize is a repeatable customer-value operating system.`,
+      headline: `${COMPANY.name} has a credible loyalty case now, and the next unlock is making the recommendations data-grounded rather than purely modeled.`,
       points: [
         `Lead with retention economics: the current model attributes ${currency(model.netValue)} in annual net value and ${Math.round(model.roi)}% ROI, with payback by month ${model.paybackMonths}.`,
         `Keep the recommendation simple: ${selectedProgram.name} is the right first architecture because it protects high-value customers without turning loyalty into a blanket discount program.`,
-        `Be transparent on maturity: this is a strong executive demo today; live data grounding and workflow execution are the unlocks that move it toward ${DATA.maturity.targetBand}.`,
+        `Be transparent on maturity: this is a strong executive demo today; real data ingestion and an AI reasoning layer are the unlocks that move it toward a ${DATA.maturity.targetBand}.`,
       ],
     };
   }
@@ -864,11 +864,11 @@ function getCopilotAnswer(prompt, { activeTab, model, selectedProgram, sliderVal
   }
 
   return {
-    headline: `The next build should turn ${activeTab} from an insight surface into an action surface.`,
+    headline: `The next build should make ${activeTab} feel more alive through real data ingestion and AI-assisted iteration.`,
     points: [
-      "Connect source systems first: POS, ecommerce, CRM, ESP, loyalty platform, and finance tables need customer-level identity resolution and metric lineage.",
-      "Add copilot workflows next: ask questions, rewrite recommendations, generate segments, produce campaign briefs, and explain assumption changes in real time.",
-      "Close the loop last: push audiences and journeys into front-office tools, measure lift against control groups, and recalibrate the model as actual performance arrives.",
+      "Start with file-based ingestion before live connectors: map POS, ecommerce, CRM, ESP, and margin exports into one customer-level analysis layer.",
+      "Add copilot workflows next: ask questions, rewrite recommendations, generate segment briefs, and explain assumption changes in real time.",
+      "Use confidence bands and source labels so users can tell the difference between observed behavior, modeled lift, and partner judgment.",
     ],
   };
 }
