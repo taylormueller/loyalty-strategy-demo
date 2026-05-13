@@ -34,8 +34,19 @@ const COMPANY = {
 
 const DATA = {
   firm: {
-    name: "Northstar Loyalty Advisors",
-    reportDate: "May 5, 2026",
+    name: "Grant Thornton",
+    reportDate: "May 13, 2026",
+    approach: [
+      { stage: "Data Factory", title: "Client systems", detail: "POS, ecommerce, CRM, ESP, loyalty, ERP, SKU margin, service, VOC, and competitive signals." },
+      { stage: "Intelligence Foundry", title: "Data-to-insight layer", detail: "Identity resolution, hygiene, lineage, segmentation, incrementality logic, and AI-assisted interpretation." },
+      { stage: "Decision Distribution", title: "Strategy outputs", detail: "Loyalty opportunity, program design, business case, journey briefs, roadmap, and quarterly optimization." },
+    ],
+    principles: [
+      "Loyalty should increase return on acquisition by improving retention, frequency, average spend, and share of wallet.",
+      "Customer behavior is often predictable, but hard to change; strategy must be built around observed segments and moments.",
+      "Inside-out customer data needs outside-in context: competitive programs, voice of customer, price sensitivity, and market signals.",
+      "Membership growth is not the same as behavior change; the model must separate enrollment, engagement, incrementality, and liability.",
+    ],
   },
   modules: [
     "Customer Diagnostic",
@@ -342,10 +353,11 @@ export default function LoyaltyStrategyInABox() {
         <nav className="rounded-2xl border border-[#E8E6E1] bg-[#F7F6F3] px-4 pt-4 shadow-[0_1px_4px_rgba(0,0,0,0.06)] sm:rounded-3xl sm:px-6 sm:pt-5">
           <div className="flex flex-col gap-4 pb-5 lg:flex-row lg:items-start lg:justify-between lg:gap-8">
             <div>
-              <p className={label}>Demo Workspace</p>
+              <img alt="Grant Thornton" className="mb-4 h-8 w-auto" src="/grant-thornton.png" />
+              <p className={label}>AI Front Office Demo Workspace</p>
               <h1 className="mt-1 text-3xl font-black tracking-[-0.02em] sm:text-4xl lg:text-5xl">Loyalty Strategy in a Box</h1>
               <p className="mt-2 text-sm font-semibold text-[#4B4B4B]">{COMPANY.name}</p>
-              <p className="mt-2 max-w-2xl text-sm font-medium text-[#4B4B4B]">A practical strategy workspace that helps your team see where loyalty can grow customer value, what to build, and what it takes to launch with confidence.</p>
+              <p className="mt-2 max-w-2xl text-sm font-medium text-[#4B4B4B]">A Grant Thornton strategy workspace that turns client data into loyalty intelligence, business case clarity, and a practical path to behavior change.</p>
             </div>
             <div className="flex w-full flex-col gap-2 sm:flex-row lg:w-auto lg:gap-3">
               <button className="rounded-2xl px-5 py-3 text-sm font-extrabold text-[#7C3AED] transition hover:bg-[#F3F0FF] sm:w-auto" onClick={() => setIsDataModalOpen(true)} type="button">
@@ -370,6 +382,8 @@ export default function LoyaltyStrategyInABox() {
           </div>
         </nav>
 
+        <GTApproach />
+
         <section className="pt-6 sm:pt-8">
           {activeTab === "Customer Diagnostic" && <CustomerDiagnostic />}
           {activeTab === "Program Design" && <ProgramDesign selectedProgram={selectedProgram} selectedProgramType={selectedProgramType} setSelectedProgramType={setSelectedProgramType} />}
@@ -392,6 +406,36 @@ function ModuleHeader({ eyebrow, title, subtitle }) {
       <h2 className="mt-2 text-3xl font-black tracking-[-0.02em] text-[#1A1A1A] sm:text-4xl">{title}</h2>
       <p className="mt-3 text-base text-[#4B4B4B] sm:text-lg">{subtitle}</p>
     </header>
+  );
+}
+
+function GTApproach() {
+  return (
+    <section className="mt-5 grid grid-cols-1 gap-4 lg:grid-cols-[1.05fr_0.95fr]">
+      <article className="rounded-2xl border border-[#E8E6E1] bg-white p-4 shadow-[0_1px_4px_rgba(0,0,0,0.06)] sm:p-5">
+        <p className={label}>Grant Thornton Loyalty Approach</p>
+        <h2 className="mt-1 text-2xl font-black tracking-[-0.02em] text-[#1A1A1A] sm:text-3xl">From messy customer data to loyalty decisions</h2>
+        <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-3">
+          {DATA.firm.approach.map((stage, index) => (
+            <div className="rounded-2xl bg-[#F7F6F3] p-4" key={stage.stage}>
+              <span className="grid h-8 w-8 place-items-center rounded-full bg-[#7C3AED] text-sm font-extrabold text-white">{index + 1}</span>
+              <p className="mt-3 text-xs font-extrabold uppercase tracking-[0.12em] text-[#7C3AED]">{stage.stage}</p>
+              <h3 className="mt-1 text-lg font-extrabold">{stage.title}</h3>
+              <p className="mt-2 text-sm leading-6 text-[#4B4B4B]">{stage.detail}</p>
+            </div>
+          ))}
+        </div>
+      </article>
+      <article className="rounded-2xl border border-[#E8E6E1] bg-[#F7F6F3] p-4 shadow-[0_1px_4px_rgba(0,0,0,0.06)] sm:p-5">
+        <p className={label}>Firm POV Embedded In The Demo</p>
+        <h2 className="mt-1 text-2xl font-black tracking-[-0.02em] text-[#1A1A1A] sm:text-3xl">Inside-out data plus outside-in context</h2>
+        <div className="mt-4 space-y-3">
+          {DATA.firm.principles.map((principle) => (
+            <p className="rounded-2xl bg-white p-3 text-sm font-semibold leading-6 text-[#4B4B4B]" key={principle}>{principle}</p>
+          ))}
+        </div>
+      </article>
+    </section>
   );
 }
 
@@ -803,7 +847,7 @@ function customerDiagnosticInsights(top20) {
     {
       prompt: "Where is the opportunity?",
       headline: "The loyalty case is concentrated in repeat buyers, not the full file.",
-      body: `The top 20% of customers generate ${top20}% of revenue, which means the first job of the program is protection and expansion of high-value households. In practical terms: do not spend evenly across all customers; fund the cohorts where retention economics are already strongest.`,
+      body: `The top 20% of customers generate ${top20}% of revenue, which matches Grant Thornton's view that loyalty should increase return on acquisition by protecting and growing the best customers first. In practical terms: do not spend evenly across all customers; fund the cohorts where retention economics are already strongest.`,
     },
     {
       prompt: "What is the risk?",
@@ -813,7 +857,7 @@ function customerDiagnosticInsights(top20) {
     {
       prompt: "What should we prove next?",
       headline: "Validate whether the candidate pool is reachable, not just valuable.",
-      body: `${DATA.diagnostic.candidateSizing.customers} customers look behaviorally ready for a structured program. The next proof point is contactability: email/SMS opt-in, store associate capture, and whether these customers respond to tier-progress messaging.`,
+      body: `${DATA.diagnostic.candidateSizing.customers} customers look behaviorally ready for a structured program. The next proof point is whether observed behavior can be changed: contactability, email/SMS opt-in, store associate capture, and response to tier-progress messaging.`,
     },
   ];
 }
@@ -823,12 +867,12 @@ function programDesignInsights(selectedProgram) {
     {
       prompt: "Why this design?",
       headline: `${selectedProgram.name} is the strongest fit because the brand needs motivation, not more markdowns.`,
-      body: "The diagnostic shows a meaningful gap between high-value and low-frequency customers. Status gives Ridge & Roam a way to create progression, recognition, and service benefits without training customers to wait for discounts.",
+      body: "The diagnostic shows a meaningful gap between high-value and low-frequency customers. GT's retail loyalty lens is to shift frequency and share of wallet without over-relying on incentives. Status gives Ridge & Roam progression, recognition, and service benefits without training customers to wait for discounts.",
     },
     {
       prompt: "What could go wrong?",
       headline: "The main design risk is complexity at launch.",
-      body: "A tiered architecture only works if customers and store teams can explain it in one breath. The first version should keep tier thresholds, benefits, and earning rules simple enough to support in-store, email, and post-purchase onboarding.",
+      body: "A tiered architecture only works if customers and store teams can explain it in one breath. The first version should keep tier thresholds, benefits, and earning rules simple enough to support in-store, email, and post-purchase onboarding. Membership growth alone is not the goal; behavior change is.",
     },
     {
       prompt: "What would AI improve?",
@@ -843,7 +887,7 @@ function businessCaseInsights(model, sliderValues) {
     {
       prompt: "What drives ROI?",
       headline: "The model is most sensitive to quality of engagement, not enrollment volume alone.",
-      body: `${sliderValues.enrollmentRate}% enrollment is valuable only if members stay active and change behavior. The current case attributes ${currency(model.netValue)} in annual net value, but the executive conversation should focus on churn reduction, AOV lift, and active member rate.`,
+      body: `${sliderValues.enrollmentRate}% enrollment is valuable only if members stay active and change behavior. The current case attributes ${currency(model.netValue)} in annual net value, but the executive conversation should focus on incrementality: churn reduction, AOV lift, frequency lift, and active member rate.`,
     },
     {
       prompt: "What should CFO challenge?",
@@ -853,7 +897,7 @@ function businessCaseInsights(model, sliderValues) {
     {
       prompt: "Is liability controlled?",
       headline: "Redemption liability is manageable if earn and burn stay tied to margin discipline.",
-      body: `A ${sliderValues.redemptionRate}% redemption rate signals healthy engagement, but it also needs finance ownership. The program should track outstanding points, breakage, and margin by category from day one.`,
+      body: `A ${sliderValues.redemptionRate}% redemption rate signals healthy engagement, but it also needs finance ownership. GT's POV is that rewards economics need as much attention as campaign performance: outstanding points, breakage, and margin by category should be visible from day one.`,
     },
   ];
 }
@@ -873,7 +917,7 @@ function memberJourneyInsights() {
     {
       prompt: "How should channels be used?",
       headline: "Channel choice should follow intent, not internal preference.",
-      body: "Email is strong for storytelling and education, push is better for progress nudges, SMS should be reserved for high-urgency save moments, and in-store associate prompts matter most when identity capture is incomplete.",
+      body: "Email is strong for storytelling and education, push is better for progress nudges, SMS should be reserved for high-urgency save moments, and in-store associate prompts matter most when identity capture is incomplete. This is where inside-out behavior data should meet outside-in customer preference signals.",
     },
   ];
 }
@@ -883,12 +927,12 @@ function dataRoadmapInsights() {
     {
       prompt: "What data matters first?",
       headline: "Transaction history and customer identity are the spine of the analysis.",
-      body: "Before adding richer signals, the team needs clean customer-level transactions, SKU detail, and a reliable customer ID. Without that spine, segmentation, lapse analysis, and program economics become attractive but fragile.",
+      body: "Before adding richer signals, the team needs clean customer-level transactions, SKU detail, and a reliable customer ID. This is the Data Factory foundation: without it, segmentation, lapse analysis, and program economics become attractive but fragile.",
     },
     {
       prompt: "Where does AI help?",
       headline: "AI is most useful after the data is mapped, not before.",
-      body: "The copilot should interpret patterns, explain tradeoffs, draft recommendations, and generate segment briefs. It should not mask messy source data. Clean ingestion gives the AI something trustworthy to reason over.",
+      body: "The copilot should interpret patterns, explain tradeoffs, draft recommendations, and generate segment briefs. It should not mask messy source data. Clean ingestion gives the Intelligence Foundry something trustworthy to reason over.",
     },
     {
       prompt: "What is the first build?",
